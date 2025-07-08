@@ -1,0 +1,7 @@
+from . import rent_rental_object_group
+from . import rent_rental_object
+from . import rent_contract
+from . import rent_cost_center
+from . import rent_abstract_monthly_revenue
+from . import rent_actual_monthly_revenue
+from . import rent_planned_monthly_revenue

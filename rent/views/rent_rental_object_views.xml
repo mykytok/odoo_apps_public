@@ -1,0 +1,63 @@
+<odoo>
+
+    <record id="view_rent_rental_object_tree" model="ir.ui.view">
+        <field name="name">rent.rental.object.list</field>
+        <field name="model">rent.rental.object</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="rental_object_group_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="rent_rental_object_form" model="ir.ui.view">
+        <field name="name">rent.rental.object.form ()</field>
+        <field name="model">rent.rental.object</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="rental_object_group_id"/>
+                            <field name="contract_ids">
+                                <list string="Contract" default_order="date desc, number desc">
+                                    <field name="date"/>
+                                    <field name="name"/>
+                                    <field name="contract_type"/>
+                                    <field name="number"/>
+                                </list>
+                            </field>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="rent_rental_object_search" model="ir.ui.view">
+        <field name="name">rent.rental.object.search (rent_rental_object)</field>
+        <field name="model">rent.rental.object</field>
+        <field name="arch" type="xml">
+            <search string="Filters">
+                <searchpanel>
+                    <field name="rental_object_group_id" string="Group" hierarchize="1" select="one" order="name"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rent_rental_object_window" model="ir.actions.act_window">
+        <field name="name">Rental object</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">rent.rental.object</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="rent_menu_rental_object"
+              action="action_rent_rental_object_window"
+              parent="rent_menu_configuration"
+              name="Rental object" sequence="100"/>
+
+</odoo>

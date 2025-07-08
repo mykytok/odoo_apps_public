@@ -1,0 +1,10 @@
+<odoo>
+    <menuitem id="rent_main_menu"
+              web_icon="rent,static/description/icon.png"
+              name="Rent" sequence="300"/>
+
+    <menuitem id="rent_menu_configuration"
+              parent="rent_main_menu"
+              name="Configuration" sequence="900"/>
+
+</odoo>

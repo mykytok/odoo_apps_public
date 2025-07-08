@@ -40,3 +40,15 @@ class CostCenter(models.Model):
             'target': 'self',
             'domain': [('cost_center_id', '=', self.id)],
         }
+    def open_actual_monthly_revenue_list(self):
+        self.ensure_one()
+        return {
+            'name': 'Actual monthly revenue',
+            'views': [[self.env.ref('rent.view_rent_actual_monthly_revenue_list').id, 'list']],
+            'type': 'ir.actions.act_window',
+            'res_model': 'rent.actual.monthly.revenue',
+            'view_mode': 'list',
+            'res_id': False,
+            'target': 'self',
+            'domain': [('cost_center_id', '=', self.id)],
+        }

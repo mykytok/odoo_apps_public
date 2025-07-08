@@ -20,12 +20,17 @@
 
                 <sheet>
                     <header>
-                                        <button string="Open planned revenue"
-                                            name="open_planned_monthly_revenue_list"
-                                            type="object"
-                                            class="oe_highlight" data-hotkey="q"
-                                            display="always"/>
-                                    </header>
+                        <button string="Open planned revenue"
+                                name="open_planned_monthly_revenue_list"
+                                type="object"
+                                class="oe_highlight" data-hotkey="q"
+                                display="always"/>
+                        <button string="Open actual revenue"
+                                name="open_actual_monthly_revenue_list"
+                                type="object"
+                                class="oe_highlight" data-hotkey="q"
+                                display="always"/>
+                    </header>
                     <group>
                         <group>
                             <field name="name"/>

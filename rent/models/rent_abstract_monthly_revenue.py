@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from odoo import models, fields, api
+from odoo.tools.misc import format_date
 
 
 class AbstractMonthlyRevenue(models.AbstractModel):
@@ -22,15 +23,12 @@ class AbstractMonthlyRevenue(models.AbstractModel):
     revenue = fields.Float(string="Revenue")
 
     @api.depends('cost_center_id')
-    @api.onchange('cost_center_id')
     @api.depends('date')
-    @api.onchange('date')
     @api.depends('revenue')
-    @api.onchange('revenue')
     def _compute_name(self):
         for record in self:
             record.name = ("%s %s %s" %
                            (record.cost_center_id.name,
-                            fields.Date.to_string(record.date),
+                            format_date(env=self.env, value=record.date),
                             record.revenue)
                            )

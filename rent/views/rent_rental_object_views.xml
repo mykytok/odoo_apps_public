@@ -20,18 +20,41 @@
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="rental_object_group_id"/>
+                        </group>
+                        <group>
+                            <field name="actual_contract_number_date"/>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="area_size"/>
+                            </group>
+                            <group>
+                                <field name="rental_object_group_id"/>
+                            </group>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Contracts" name="contracts">
                             <field name="contract_ids">
-                                <list string="Contract" default_order="date desc, number desc">
+                                <list default_order="date desc, number desc">
                                     <field name="date"/>
                                     <field name="name"/>
                                     <field name="contract_type"/>
                                     <field name="number"/>
                                 </list>
                             </field>
-                        </group>
-                    </group>
+                        </page>
+                        <page string="Cost centers">
+                            <field name="cost_center_ids">
+                                <list default_order="name">
+                                    <field name="name"/>
+                                    <field name="area_size" sum="Total size"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
+                <chatter/>
             </form>
         </field>
     </record>

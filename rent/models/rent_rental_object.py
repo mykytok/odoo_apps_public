@@ -1,11 +1,16 @@
-from odoo import models, fields
+import logging
 
+from odoo import models, fields, api, _
+from odoo.tools.misc import format_date
+
+_logger = logging.getLogger(__name__)
 
 class RentalObject(models.Model):
     """A model for storing Rental Object
                     """
 
     _name = 'rent.rental.object'
+    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin', ]
     _description = 'Rental object'
 
     name = fields.Char(translate=True)
@@ -27,3 +32,40 @@ class RentalObject(models.Model):
         inverse_name='rental_object_id',
         string="Cost centers",
     )
+
+    actual_contract_number_date = fields.Char(
+        compute='_compute_actual_contract_number_date',
+        compute_sudo=True,
+        store=True,
+        string="Actual contract",
+    )
+
+    @api.depends('contract_ids')
+    def _compute_actual_contract_number_date(self):
+        for record in self:
+            last_contract = self.env['rent.contract'].get_last_rental_object_contract(record.id)
+            # last_contract = self._search_last_contract(record.id)
+            if last_contract:
+                record.actual_contract_number_date = (_("#%s from %s") %
+                                                      (last_contract.number,
+                                                       format_date(
+                                                           env=self.env,
+                                                           value=last_contract.date)
+                                                       )
+                                                      )
+            else:
+                record.actual_contract_number_date = None
+
+    @api.model
+    def _search_last_contract(self, rental_object_id):
+        rec = self.env['rent.contract'].search(
+            domain=[
+                ('rental_object_id', '=', rental_object_id),
+                ('contract_type', '=', 'contract')
+            ],
+            order='date desc',
+            limit=1
+        )
+        if rec:
+            return rec[0]
+        return False

@@ -21,21 +21,33 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
-                    <group>
-                        <field name="name"/>
-                        <field name="rental_object_id"/>
-                        <field name="contract_type"/>
-                        <field name="number"/>
-                        <field name="date"/>
-                        <field name="rental_rate"/>
-                        <field name="rental_rate_currency_id"/>
-                        <field name="rental_rate_tax_id"/>
-                        <field name="marketing_rate"/>
-                        <field name="marketing_rate_currency_id"/>
-                        <field name="marketing_rate_tax_id"/>
-                        <field name="exploitation_rate"/>
-                        <field name="exploitation_rate_currency_id"/>
-                        <field name="exploitation_rate_tax_id"/>
+                    <group col='1'>
+                        <group>
+                            <field name="name"/>
+                            <field name="rental_object_id"/>
+                            <field name="contract_type"/>
+                        </group>
+                        <group>
+                            <group><field name="number"/></group>
+                            <group><field name="date"/></group>
+                        </group>
+                        <group col='3' >
+                            <group string="Rental">
+                            <field name="rental_rate" string="rate"/>
+                            <field name="rental_rate_currency_id" string="currency"/>
+                            <field name="rental_rate_tax_id" string="tax"/>
+                            </group>
+                            <group string="Marketing">
+                            <field name="marketing_rate" string="rate"/>
+                            <field name="marketing_rate_currency_id" string="currency"/>
+                            <field name="marketing_rate_tax_id" string="tax"/>
+                            </group>
+                            <group string="Exploitation">
+                            <field name="exploitation_rate" string="rate"/>
+                            <field name="exploitation_rate_currency_id" string="currency"/>
+                            <field name="exploitation_rate_tax_id" string="tax"/>
+                            </group>
+                        </group>
                     </group>
                 </sheet>
             </form>

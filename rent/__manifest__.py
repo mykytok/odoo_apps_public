@@ -8,6 +8,7 @@
 
     'depends': [
         'base',
+        'portal'
     ],
 
     'external_dependencies': {
@@ -19,6 +20,7 @@
 
         'views/rent_menu.xml',
         'views/rent_planned_monthly_revenue_views.xml',
+        'views/rent_actual_monthly_revenue_views.xml',
         'views/rent_rental_object_group_views.xml',
         'views/rent_rental_object_views.xml',
         'views/rent_contract_views.xml',

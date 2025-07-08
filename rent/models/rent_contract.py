@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class Contract(models.Model):
@@ -57,3 +57,17 @@ class Contract(models.Model):
     exploitation_rate_tax_id = fields.Many2one(
         comodel_name='account.tax',
     )
+
+    @api.model
+    def get_last_rental_object_contract(self, rental_object_id):
+        rec = self.env['rent.contract'].search(
+            domain=[
+                ('rental_object_id', '=', rental_object_id),
+                ('contract_type', '=', 'contract')
+            ],
+            order='date desc',
+            limit=1
+        )
+        if rec:
+            return rec[0]
+        return False

@@ -1,0 +1,27 @@
+<odoo>
+
+    <record id="view_rent_actual_monthly_revenue_list" model="ir.ui.view">
+        <field name="name">rent.actual.monthly.revenue.list</field>
+        <field name="model">rent.actual.monthly.revenue</field>
+        <field name="arch" type="xml">
+            <list default_order="date desc" editable="top" multi_edit="1">
+                <field name="cost_center_id"/>
+                <field name="date"/>
+                <field name="revenue"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_rent_actual_monthly_revenue_window" model="ir.actions.act_window">
+        <field name="name">Actual monthly revenue</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">rent.actual.monthly.revenue</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <menuitem id="rent_menu_actual_monthly_revenue"
+              action="action_rent_actual_monthly_revenue_window"
+              parent="rent_menu_configuration"
+              name="Actual monthly revenue" sequence="200"/>
+
+</odoo>

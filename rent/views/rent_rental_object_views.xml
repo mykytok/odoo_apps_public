@@ -41,6 +41,12 @@
                                     <field name="name"/>
                                     <field name="contract_type"/>
                                     <field name="number"/>
+                                    <field name="rental_rate" widget='monetary'
+                                           options="{'currency_field': 'rental_rate_currency_id'}"/>
+                                    <field name="exploitation_rate" widget='monetary'
+                                           options="{'currency_field': 'marketing_rate_currency_id'}"/>
+                                    <field name="marketing_rate" widget='monetary'
+                                           options="{'currency_field': 'marketing_rate_currency_id'}"/>
                                 </list>
                             </field>
                         </page>
@@ -80,7 +86,7 @@
 
     <menuitem id="rent_menu_rental_object"
               action="action_rent_rental_object_window"
-              parent="rent_menu_configuration"
-              name="Rental object" sequence="100"/>
+              parent="menu_rent_rental_objects"
+              name="Rental object" sequence="10"/>
 
 </odoo>

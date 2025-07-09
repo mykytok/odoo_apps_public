@@ -25,6 +25,11 @@
         'views/rent_rental_object_views.xml',
         'views/rent_contract_views.xml',
         'views/rent_cost_center_views.xml',
+
+        'views/rent_analysis_report_views.xml',
+        'reports/rent_analysis_report_templates.xml',
+        'wizards/rent_analysis_wizard_view.xml',
+
     ],
     'demo': [
     ],

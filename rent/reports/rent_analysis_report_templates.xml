@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="action_report_rent_analysis" model="ir.actions.report">
+            <field name="name">Rent Analysis</field>
+            <field name="model">rent.analysis.wizard</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">rent.report_rent_analysis_template</field>
+            <field name="report_file">rent.report_rent_analysis_template</field>
+            <field name="print_report_name">
+                'Rent Analysis - %s to %s' % (object.date_from.strftime('%Y-%m-%d'), object.date_to.strftime('%Y-%m-%d'))
+            </field>
+            <field name="binding_model_id" ref="model_rent_analysis_wizard"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <template id="report_rent_analysis_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <h2>Rent Analysis from <span t-esc="data.form_data.date_from"/> to <span t-esc="data.form_data.date_to"/></h2>
+                            <p>All amounts converted to: <span t-esc="data.company_currency_symbol"/></p>
+
+                            <t t-foreach="data.report_results" t-as="obj_data">
+                                <h3 class="mt-4">Rental Object: <span t-esc="obj_data.rental_object_name"/></h3>
+                                <table class="table table-sm table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Period</th>
+                                            <th>Contract</th>
+                                            <th class="text-end">Rental Amount</th>
+                                            <th class="text-end">Exploitation Amount</th>
+                                            <th class="text-end">Marketing Amount</th>
+                                            <th class="text-end">Period Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="obj_data.effective_periods_breakdown" t-as="period">
+                                            <tr>
+                                                <td>
+                                                    <span t-esc="period.start_date"/> - <span t-esc="period.end_date"/>
+                                                    (<span t-esc="period.days_in_period"/> days)
+                                                </td>
+                                                <td>
+                                                    <span t-esc="period.contract_details.name"/>
+                                                </td>
+                                                <td class="text-end">
+                                                    <span t-esc="period.rental_company_currency" t-options='{"widget": "monetary", "display_currency": data.company_currency_id}'/>
+                                                </td>
+                                                <td class="text-end">
+                                                    <span t-esc="period.exploitation_company_currency" t-options='{"widget": "monetary", "display_currency": data.company_currency_id}'/>
+                                                </td>
+                                                <td class="text-end">
+                                                    <span t-esc="period.marketing_company_currency" t-options='{"widget": "monetary", "display_currency": data.company_currency_id}'/>
+                                                </td>
+                                                <td class="text-end">
+                                                    <span t-esc="period.total_period_company_currency" t-options='{"widget": "monetary", "display_currency": data.company_currency_id}'/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="2" class="text-end">Total for <span t-esc="obj_data.rental_object_name"/>:</th>
+                                            <th class="text-end">
+                                                <span t-esc="obj_data.total_rental_amount_company_currency" t-options='{"widget": "monetary", "display_currency": data.company_currency_id}'/>
+                                            </th>
+                                            <th class="text-end">
+                                                <span t-esc="obj_data.total_exploitation_amount_company_currency" t-options='{"widget": "monetary", "display_currency": data.company_currency_id}'/>
+                                            </th>
+                                            <th class="text-end">
+                                                <span t-esc="obj_data.total_marketing_amount_company_currency" t-options='{"widget": "monetary", "display_currency": data.company_currency_id}'/>
+                                            </th>
+                                            <th class="text-end">
+                                                <span t-esc="obj_data.total_rent_all_types_company_currency" t-options='{"widget": "monetary", "display_currency": data.company_currency_id}'/>
+                                            </th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </t>
+                            <div class="o_company_address">
+                                </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+</odoo>

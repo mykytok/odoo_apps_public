@@ -11,6 +11,12 @@
                 <field name="contract_type"/>
                 <field name="number"/>
                 <field name="date"/>
+                <field name="rental_rate" widget='monetary'
+                       options="{'currency_field': 'rental_rate_currency_id'}"/>
+                <field name="exploitation_rate" widget='monetary'
+                       options="{'currency_field': 'marketing_rate_currency_id'}"/>
+                <field name="marketing_rate" widget='monetary'
+                       options="{'currency_field': 'marketing_rate_currency_id'}"/>
             </list>
         </field>
     </record>
@@ -21,32 +27,34 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
-                    <group>
-                        <group>
-                            <field name="name"/>
-                            <field name="rental_object_id"/>
+                    <group col="1">
+                        <group col="2">
+                            <group>
+                                <field name="name"/>
+                                <field name="rental_object_id"/>
+                            </group>
+                            <group>
+                                <field name="contract_type"/>
+                                <field name="number"/>
+                                <field name="date"/>
+                                <field name="expiration_date"/>
+                            </group>
                         </group>
-                        <group>
-                            <field name="contract_type"/>
-                            <field name="number"/>
-                            <field name="date"/>
-                        </group>
-                        <newline/>
                         <group col='3' >
                             <group string="Rental">
-                            <field name="rental_rate" string="rate"/>
-                            <field name="rental_rate_currency_id" string="currency"/>
-                            <field name="rental_rate_tax_id" string="tax"/>
-                            </group>
-                            <group string="Marketing">
-                            <field name="marketing_rate" string="rate"/>
-                            <field name="marketing_rate_currency_id" string="currency"/>
-                            <field name="marketing_rate_tax_id" string="tax"/>
+                                <field name="rental_rate" class="o_input_13ch" widget='monetary' options="{'currency_field': 'rental_rate_currency_id'}"/>
+                                <field name="rental_rate_currency_id" string="currency"/>
+                                <field name="rental_rate_tax_id" string="tax"/>
                             </group>
                             <group string="Exploitation">
-                            <field name="exploitation_rate" string="rate"/>
-                            <field name="exploitation_rate_currency_id" string="currency"/>
-                            <field name="exploitation_rate_tax_id" string="tax"/>
+                                <field name="exploitation_rate" string="rate"/>
+                                <field name="exploitation_rate_currency_id" string="currency"/>
+                                <field name="exploitation_rate_tax_id" string="tax"/>
+                            </group>
+                            <group string="Marketing">
+                                <field name="marketing_rate" string="rate"/>
+                                <field name="marketing_rate_currency_id" string="currency"/>
+                                <field name="marketing_rate_tax_id" string="tax"/>
                             </group>
                         </group>
                     </group>
@@ -76,7 +84,7 @@
 
     <menuitem id="rent_menu_contract"
               action="action_rent_contract_window"
-              parent="rent_menu_configuration"
+              parent="menu_rent_rental_objects"
               name="Contract" sequence="200"/>
 
 </odoo>

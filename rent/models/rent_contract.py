@@ -25,7 +25,7 @@ class Contract(models.Model):
     )
     expiration_date = fields.Date(
         string='Expiration date'
-    )
+    ) # last day of contract
     contract_type = fields.Selection(
         [('contract', 'Contract'),
          ('main_additional_agreement', 'Main additional agreement'),
@@ -33,33 +33,38 @@ class Contract(models.Model):
         string='Type of contract',
         required =True
     )
-    rental_rate = fields.Float(
-        string='Rental rate'
-    )
-    rental_rate_currency_id = fields.Many2one(
-        comodel_name='res.currency',
-    )
+
+    # Rental Rate
+    rental_rate = fields.Monetary(string='Rental Rate (Monthly)',
+                                  currency_field='rental_rate_currency_id',
+                                  required=True)
+    rental_rate_currency_id = fields.Many2one(comodel_name='res.currency',
+                                              string='Rental Rate Currency',
+                                              default=lambda self: self.env.company.currency_id.id)
     rental_rate_tax_id = fields.Many2one(
         comodel_name='account.tax',
-    )
-    marketing_rate = fields.Float(
-        string='Marketing rate'
-    )
-    marketing_rate_currency_id = fields.Many2one(
-        comodel_name='res.currency',
-    )
+        string='Rental Rate Tax')
+
+    # Exploitation Rate
+    exploitation_rate = fields.Monetary(string='Exploitation Rate (Monthly)',
+                                        currency_field='exploitation_rate_currency_id',
+                                        required=True)
+    exploitation_rate_currency_id = fields.Many2one(comodel_name='res.currency',
+                                                    string='Exploitation Rate Currency',
+                                                    default=lambda self: self.env.company.currency_id.id)
+    exploitation_rate_tax_id = fields.Many2one(comodel_name='account.tax',
+                                               string='Exploitation Rate Tax')
+
+    # Marketing Rate
+    marketing_rate = fields.Monetary(string='Marketing Rate (Monthly)',
+                                     currency_field='marketing_rate_currency_id',
+                                     required=True)
+    marketing_rate_currency_id = fields.Many2one(comodel_name='res.currency',
+                                                 string='Marketing Rate Currency',
+                                                 default=lambda self: self.env.company.currency_id.id)
     marketing_rate_tax_id = fields.Many2one(
         comodel_name='account.tax',
-    )
-    exploitation_rate = fields.Float(
-        string='Exploitation rate'
-    )
-    exploitation_rate_currency_id = fields.Many2one(
-        comodel_name='res.currency',
-    )
-    exploitation_rate_tax_id = fields.Many2one(
-        comodel_name='account.tax',
-    )
+        string='Marketing Rate Tax')
 
     @api.depends('rental_object_id')
     @api.depends('number')

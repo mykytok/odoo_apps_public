@@ -3,6 +3,16 @@
               web_icon="rent,static/description/icon.png"
               name="Rent" sequence="300"/>
 
+    <menuitem id="menu_rent_rental_objects"
+              name="Rental objects"
+              parent="rent_main_menu"
+              sequence="300"/>
+
+    <menuitem id="menu_rent_reports"
+              name="Reports"
+              parent="rent_main_menu"
+              sequence="500"/>
+
     <menuitem id="rent_menu_configuration"
               parent="rent_main_menu"
               name="Configuration" sequence="900"/>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="rent_analysis_wizard_form_view" model="ir.ui.view">
+            <field name="name">rent.analysis.wizard.form</field>
+            <field name="model">rent.analysis.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Rent Analysis Report">
+                    <group>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <footer>
+                        <button name="action_generate_rent_analysis_report" string="Generate Report" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_rent_analysis_wizard" model="ir.actions.act_window">
+            <field name="name">Rent Analysis</field>
+            <field name="res_model">rent.analysis.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field> </record>
+
+        <menuitem
+            id="menu_rent_analysis_report"
+            name="Rent Analysis"
+            parent="menu_rent_reports"
+            action="action_rent_analysis_wizard"
+            sequence="800"
+        />
+    </data>
+</odoo>

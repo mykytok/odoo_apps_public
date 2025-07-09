@@ -1,9 +1,6 @@
-import logging
-
 from odoo import models, fields, api, _
 from odoo.tools.misc import format_date
 
-_logger = logging.getLogger(__name__)
 
 class RentalObject(models.Model):
     """A model for storing Rental Object

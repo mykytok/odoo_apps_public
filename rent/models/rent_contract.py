@@ -1,4 +1,5 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.tools.misc import format_date
 
 
 class Contract(models.Model):
@@ -8,7 +9,9 @@ class Contract(models.Model):
     _name = 'rent.contract'
     _description = 'Contract'
 
-    name = fields.Char(translate=True)
+    name = fields.Char(
+        compute='_compute_name',
+    )
     active = fields.Boolean(default=True)
     rental_object_id = fields.Many2one(
         comodel_name='rent.rental.object',
@@ -57,6 +60,20 @@ class Contract(models.Model):
     exploitation_rate_tax_id = fields.Many2one(
         comodel_name='account.tax',
     )
+
+    @api.depends('rental_object_id')
+    @api.depends('number')
+    @api.depends('date')
+    @api.onchange('rental_object_id')
+    @api.onchange('number')
+    @api.onchange('date')
+    def _compute_name(self):
+        for record in self:
+            record.name = (_("#%s from %s (%s)") %
+                           (record.number,
+                            format_date(env=self.env, value=record.date),
+                            record.rental_object_id.name)
+                           )
 
     @api.model
     def get_last_rental_object_contract(self, rental_object_id):

@@ -92,28 +92,21 @@ class RentalObject(models.Model):
         Returns:
             list[dict]: A list of dictionaries, where each dictionary represents
                         the rent calculation for a rental object, including
-                        a breakdown by effective periods with their converted rates,
+                        a breakdown by **monthly segments** with their converted rates,
                         and totals in company currency for the entire range.
         """
-        rent_calculations = []
-        rental_objects = self.search([])
+        rent_calculations_by_month = []
+        rental_objects = self.env['rent.rental.object'].search([])  # Correct search for rental objects
 
         company_currency = self.env.company.currency_id
 
         for obj in rental_objects:
-            effective_periods_breakdown = []
-
-            # Totals for the current rental object in company currency for the entire range
-            total_rental_amount_company_currency = 0.0
-            total_exploitation_amount_company_currency = 0.0
-            total_marketing_amount_company_currency = 0.0
-            total_rent_all_types_company_currency = 0.0
-
             # Get all contracts for the current rental object that intersect with the report range.
             active_contracts = self.env['rent.contract'].search([
                 ('rental_object_id', '=', obj.id),
                 ('date', '<=', date_to),
                 ('expiration_date', '>=', date_from),
+                ('active', '=', True),
             ], order='date desc, id desc')
 
             # --- Step 1: Collect all significant dates within the report range ---
@@ -122,6 +115,7 @@ class RentalObject(models.Model):
             for contract in active_contracts:
                 if contract.date <= date_to and contract.date >= date_from:
                     significant_dates.add(contract.date)
+                # Note: `expiration_date` is inclusive, so we add day+1 to make interval exclusive end
                 if contract.expiration_date >= date_from and contract.expiration_date < date_to:
                     significant_dates.add(contract.expiration_date + timedelta(days=1))
 
@@ -133,174 +127,144 @@ class RentalObject(models.Model):
                 interval_end = sorted_dates[i + 1] - timedelta(days=1)
 
                 # Ensure the interval is within the report range
-                current_interval_start = max(interval_start, date_from)
-                current_interval_end = min(interval_end, date_to)
+                current_effective_start = max(interval_start, date_from)
+                current_effective_end = min(interval_end, date_to)
 
-                if current_interval_start > current_interval_end:
+                if current_effective_start > current_effective_end:
                     continue
 
-                # Find the highest priority contract active for this interval
+                # Find the highest priority contract active for this effective interval
                 effective_contract = None
                 for contract in active_contracts:
                     # Check if the contract fully covers the current effective interval
-                    if contract.date <= current_interval_start and contract.expiration_date >= current_interval_end:
+                    if contract.date <= current_effective_start and contract.expiration_date >= current_effective_end:
                         effective_contract = contract
                         break
 
-                # Default values if no contract applies to this period
-                period_rental_amount = 0.0
-                period_exploitation_amount = 0.0
-                period_marketing_amount = 0.0
+                temp_segment_start = current_effective_start
+                while temp_segment_start <= current_effective_end:
+                    current_month_day_count = calendar.monthrange(temp_segment_start.year, temp_segment_start.month)[1]
+                    end_of_current_month = date(temp_segment_start.year, temp_segment_start.month,
+                                                current_month_day_count)
 
-                # Converted amounts for report
-                period_rental_amount_company_currency = 0.0
-                period_exploitation_amount_company_currency = 0.0
-                period_marketing_amount_company_currency = 0.0
-                period_total_amount_company_currency = 0.0
+                    # The end date for this monthly segment
+                    segment_actual_end = min(current_effective_end, end_of_current_month)
 
-                period_currency_rental_symbol = company_currency.symbol
-                period_currency_exploitation_symbol = company_currency.symbol
-                period_currency_marketing_symbol = company_currency.symbol
+                    days_in_segment = (segment_actual_end - temp_segment_start).days + 1
 
-                period_tax_rental_name = ''
-                period_tax_exploitation_name = ''
-                period_tax_marketing_name = ''
+                    # Initialize amounts for this specific monthly segment
+                    segment_rental_amount = 0.0
+                    segment_exploitation_amount = 0.0
+                    segment_marketing_amount = 0.0
 
-                period_contract_id = False
-                period_contract_name = 'No Active Contract'
+                    segment_rental_amount_company_currency = 0.0
+                    segment_exploitation_amount_company_currency = 0.0
+                    segment_marketing_amount_company_currency = 0.0
+                    segment_total_amount_company_currency = 0.0
 
-                if effective_contract:
-                    days_in_period = (current_interval_end - current_interval_start).days + 1
+                    segment_currency_rental_symbol = company_currency.symbol
+                    segment_currency_exploitation_symbol = company_currency.symbol
+                    segment_currency_marketing_symbol = company_currency.symbol
 
-                    # Determine the month for which the daily rate is calculated
-                    # This is crucial because monthly rates are divided by days in *that* month.
-                    # For simplicity, we'll use the month of the interval's start date.
-                    # If an interval spans multiple months, this approach would need refinement
-                    # (e.g., splitting the interval by month boundaries).
-                    # For a single monthly rate application, this is usually sufficient.
+                    segment_tax_rental_name = ''
+                    segment_tax_exploitation_name = ''
+                    segment_tax_marketing_name = ''
 
-                    # For accurate prorating across months within one period, it's safer to break down
-                    # a given interval into sub-intervals that fall within a single calendar month.
-                    # This ensures correct `days_in_month` is used for each part.
+                    segment_contract_id = False
+                    segment_contract_name = 'No Active Contract'
 
-                    # Let's refine this to handle multi-month intervals correctly for prorating
-                    temp_start = current_interval_start
-                    while temp_start <= current_interval_end:
-                        current_month_day_count = calendar.monthrange(temp_start.year, temp_start.month)[1]
+                    if effective_contract:
+                        segment_contract_id = effective_contract.id
+                        segment_contract_name = effective_contract.name
 
-                        # Determine the end of the current month segment within the interval
-                        end_of_current_month = date(temp_start.year, temp_start.month, current_month_day_count)
-                        segment_end = min(current_interval_end, end_of_current_month)
-
-                        days_in_segment = (segment_end - temp_start).days + 1
-
-                        # Calculate proportional amounts for this segment
-                        rental_tax_indicator = effective_contract.rental_rate_tax_id.amount / 100 \
-                            if effective_contract.rental_rate_tax_id.amount_type == 'percent' \
+                        rental_tax_indicator = (effective_contract.rental_rate_tax_id.amount / 100) + 1 \
+                            if effective_contract.rental_rate_tax_id and effective_contract.rental_rate_tax_id.amount_type == 'percent' \
                             else 1
                         segment_rental_amount = (
                                 (effective_contract.rental_rate / current_month_day_count) * days_in_segment
                                 * rental_tax_indicator)
-                        exploitation_tax_indicator = effective_contract.exploitation_rate_tax_id.amount / 100 \
-                            if effective_contract.exploitation_rate_tax_id.amount_type == 'percent' \
+
+                        exploitation_tax_indicator = (effective_contract.exploitation_rate_tax_id.amount / 100) + 1 \
+                            if effective_contract.exploitation_rate_tax_id and effective_contract.exploitation_rate_tax_id.amount_type == 'percent' \
                             else 1
                         segment_exploitation_amount = (
                                 (effective_contract.exploitation_rate / current_month_day_count) * days_in_segment
                                 * exploitation_tax_indicator)
-                        marketing_tax_indicator = effective_contract.marketing_rate_tax_id.amount / 100 \
-                            if effective_contract.marketing_rate_tax_id.amount_type == 'percent' \
+
+                        marketing_tax_indicator = (effective_contract.marketing_rate_tax_id.amount / 100) + 1 \
+                            if effective_contract.marketing_rate_tax_id and effective_contract.marketing_rate_tax_id.amount_type == 'percent' \
                             else 1
                         segment_marketing_amount = (
                                 (effective_contract.marketing_rate / current_month_day_count) * days_in_segment
-                                *marketing_tax_indicator)
-
-                        # Accumulate total original amounts for the full period
-                        period_rental_amount += segment_rental_amount
-                        period_exploitation_amount += segment_exploitation_amount
-                        period_marketing_amount += segment_marketing_amount
+                                * marketing_tax_indicator)
 
                         # Convert amounts for this segment to company currency at end-of-month rate
-                        conversion_date = date(temp_start.year, temp_start.month,
-                                               current_month_day_count)  # End of segment's month
+                        # Use the last day of the segment's month for conversion rate
+                        conversion_date = date(temp_segment_start.year, temp_segment_start.month,
+                                               current_month_day_count)
 
-                        segment_rental_cc = effective_contract.rental_rate_currency_id.with_context(
+                        segment_rental_amount_company_currency = effective_contract.rental_rate_currency_id.with_context(
                             date=conversion_date)._convert(
                             segment_rental_amount, company_currency, self.env.company, round=True
-                        )
-                        segment_exploitation_cc = effective_contract.exploitation_rate_currency_id.with_context(
+                        ) if effective_contract.rental_rate_currency_id else 0.0
+
+                        segment_exploitation_amount_company_currency = effective_contract.exploitation_rate_currency_id.with_context(
                             date=conversion_date)._convert(
                             segment_exploitation_amount, company_currency, self.env.company, round=True
-                        )
-                        segment_marketing_cc = effective_contract.marketing_rate_currency_id.with_context(
+                        ) if effective_contract.exploitation_rate_currency_id else 0.0
+
+                        segment_marketing_amount_company_currency = effective_contract.marketing_rate_currency_id.with_context(
                             date=conversion_date)._convert(
                             segment_marketing_amount, company_currency, self.env.company, round=True
-                        )
+                        ) if effective_contract.marketing_rate_currency_id else 0.0
 
-                        # Accumulate total converted amounts for the full period
-                        period_rental_amount_company_currency += segment_rental_cc
-                        period_exploitation_amount_company_currency += segment_exploitation_cc
-                        period_marketing_amount_company_currency += segment_marketing_cc
-                        period_total_amount_company_currency += (
-                                    segment_rental_cc + segment_exploitation_cc + segment_marketing_cc)
+                        segment_total_amount_company_currency = (segment_rental_amount_company_currency
+                                                                 + segment_exploitation_amount_company_currency
+                                                                 + segment_marketing_amount_company_currency)
 
-                        temp_start = segment_end + timedelta(days=1)
+                        segment_currency_rental_symbol = effective_contract.rental_rate_currency_id.symbol if effective_contract.rental_rate_currency_id else ''
+                        segment_currency_exploitation_symbol = effective_contract.exploitation_rate_currency_id.symbol if effective_contract.exploitation_rate_currency_id else ''
+                        segment_currency_marketing_symbol = effective_contract.marketing_rate_currency_id.symbol if effective_contract.marketing_rate_currency_id else ''
 
-                    # Set common period details from the effective contract
-                    period_currency_rental_symbol = effective_contract.rental_rate_currency_id.symbol
-                    period_currency_exploitation_symbol = effective_contract.exploitation_rate_currency_id.symbol
-                    period_currency_marketing_symbol = effective_contract.marketing_rate_currency_id.symbol
+                        segment_tax_rental_name = effective_contract.rental_rate_tax_id.name if effective_contract.rental_rate_tax_id else ''
+                        segment_tax_exploitation_name = effective_contract.exploitation_rate_tax_id.name if effective_contract.exploitation_rate_tax_id else ''
+                        segment_tax_marketing_name = effective_contract.marketing_rate_tax_id.name if effective_contract.marketing_rate_tax_id else ''
 
-                    period_tax_rental_name = effective_contract.rental_rate_tax_id.name if effective_contract.rental_rate_tax_id else ''
-                    period_tax_exploitation_name = effective_contract.exploitation_rate_tax_id.name if effective_contract.exploitation_rate_tax_id else ''
-                    period_tax_marketing_name = effective_contract.marketing_rate_tax_id.name if effective_contract.marketing_rate_tax_id else ''
+                    # Append this monthly segment to the main list
+                    rent_calculations_by_month.append({
+                        'rental_object_id': obj.id,
+                        'rental_object_name': obj.name,
+                        'date_from': temp_segment_start.isoformat(),  # This segment's start date
+                        'date_to': segment_actual_end.isoformat(),  # This segment's end date
+                        'report_year': temp_segment_start.year,
+                        'report_month': str(temp_segment_start.month),
+                        'report_date': end_of_current_month,
+                        'days_in_period': days_in_segment,
+                        'contract_id': segment_contract_id,
+                        'contract_name': segment_contract_name,
 
-                    period_contract_id = effective_contract.id
-                    period_contract_name = effective_contract.name
+                        # Original amounts for the segment
+                        'original_rental': {'amount': segment_rental_amount, 'currency': segment_currency_rental_symbol,
+                                            'tax': segment_tax_rental_name},
+                        'original_exploitation': {'amount': segment_exploitation_amount,
+                                                  'currency': segment_currency_exploitation_symbol,
+                                                  'tax': segment_tax_exploitation_name},
+                        'original_marketing': {'amount': segment_marketing_amount,
+                                               'currency': segment_currency_marketing_symbol,
+                                               'tax': segment_tax_marketing_name},
 
-                effective_periods_breakdown.append({
-                    'start_date': current_interval_start.isoformat(),
-                    'end_date': current_interval_end.isoformat(),
-                    'days_in_period': (current_interval_end - current_interval_start).days + 1,
-                    'contract_details': {
-                        'id': period_contract_id,
-                        'name': period_contract_name,
-                    },
-                    # Original amounts (accumulated from segments within the period)
-                    'original_rental': {'amount': period_rental_amount, 'currency': period_currency_rental_symbol,
-                                        'tax': period_tax_rental_name},
-                    'original_exploitation': {'amount': period_exploitation_amount,
-                                              'currency': period_currency_exploitation_symbol,
-                                              'tax': period_tax_exploitation_name},
-                    'original_marketing': {'amount': period_marketing_amount,
-                                           'currency': period_currency_marketing_symbol,
-                                           'tax': period_tax_marketing_name},
+                        # Converted amounts for the segment
+                        'rental_amount': segment_rental_amount_company_currency,
+                        'exploitation_amount': segment_exploitation_amount_company_currency,
+                        'marketing_amount': segment_marketing_amount_company_currency,
+                        'rent_total': segment_total_amount_company_currency,  # Total for this segment
 
-                    # Converted amounts (accumulated from segments within the period)
-                    'rental_company_currency': period_rental_amount_company_currency,
-                    'exploitation_company_currency': period_exploitation_amount_company_currency,
-                    'marketing_company_currency': period_marketing_amount_company_currency,
-                    'total_period_company_currency': period_total_amount_company_currency,
-                })
+                        'company_currency_id': company_currency.id,
+                        'company_currency_symbol': company_currency.symbol,
+                        'company_currency_name': company_currency.name,
+                    })
 
-                # Accumulate totals for the rental object in company currency for the entire range
-                total_rental_amount_company_currency += period_rental_amount_company_currency
-                total_exploitation_amount_company_currency += period_exploitation_amount_company_currency
-                total_marketing_amount_company_currency += period_marketing_amount_company_currency
-                total_rent_all_types_company_currency += period_total_amount_company_currency
+                    # Move to the start of the next segment (next day after current segment ends)
+                    temp_segment_start = segment_actual_end + timedelta(days=1)
 
-            rent_calculations.append({
-                'rental_object_id': obj.id,
-                'rental_object_name': obj.name,
-                'report_date_from': date_from.isoformat(),
-                'report_date_to': date_to.isoformat(),
-                'company_currency_symbol': company_currency.symbol,
-                'company_currency_name': company_currency.name,
-
-                'total_rental_amount_company_currency': total_rental_amount_company_currency,
-                'total_exploitation_amount_company_currency': total_exploitation_amount_company_currency,
-                'total_marketing_amount_company_currency': total_marketing_amount_company_currency,
-                'total_rent_all_types_company_currency': total_rent_all_types_company_currency,
-
-                'effective_periods_breakdown': effective_periods_breakdown,
-            })
-        return rent_calculations
+        return rent_calculations_by_month

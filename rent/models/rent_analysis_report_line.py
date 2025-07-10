@@ -22,19 +22,13 @@ class RentAnalysisReportLine(models.TransientModel):
     rent_total = fields.Monetary(string='Total Rent', currency_field='company_currency_id', readonly=True)
 
     # group fields for Pivot
-    report_year = fields.Integer(string='Year', compute='_compute_report_year_month', store=True)
+    report_year = fields.Integer(string='Year')
     report_month = fields.Selection([
         ('1', 'January'), ('2', 'February'), ('3', 'March'), ('4', 'April'),
         ('5', 'May'), ('6', 'June'), ('7', 'July'), ('8', 'August'),
         ('9', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')
-    ], string='Month', compute='_compute_report_year_month', store=True)
+    ], string='Month')
 
-    @api.depends('date_from')
-    def _compute_report_year_month(self):
-        for rec in self:
-            if rec.date_from:
-                rec.report_year = rec.date_from.year
-                rec.report_month = str(rec.date_from.month)
-            else:
-                rec.report_year = False
-                rec.report_month = False
+    report_date = fields.Date(string='Date')
+
+    contract_id = fields.Many2one(comodel_name='rent.contract')

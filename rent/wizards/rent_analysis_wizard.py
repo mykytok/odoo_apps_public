@@ -42,13 +42,17 @@ class RentAnalysisWizard(models.TransientModel):
             report_line_ids.append(self.env['rent.analysis.report.line'].create({
                 'rental_object_id': obj_data['rental_object_id'],
                 'rental_object_name': obj_data['rental_object_name'],
-                'date_from': self.date_from,
-                'date_to': self.date_to,
+                'date_from': obj_data['date_from'],
+                'date_to': obj_data['date_to'],
+                'report_year': obj_data['report_year'],
+                'report_month': obj_data['report_month'],
+                'report_date': obj_data['report_date'],
                 'company_currency_id': company_currency.id,  # Передаємо ID валюти
-                'rental_amount': obj_data['total_rental_amount_company_currency'],
-                'exploitation_amount': obj_data['total_exploitation_amount_company_currency'],
-                'marketing_amount': obj_data['total_marketing_amount_company_currency'],
-                'rent_total': obj_data['total_rent_all_types_company_currency'],
+                'rental_amount': obj_data['rental_amount'],
+                'exploitation_amount': obj_data['exploitation_amount'],
+                'marketing_amount': obj_data['marketing_amount'],
+                'rent_total': obj_data['rent_total'],
+                'contract_id': obj_data['contract_id'],
             }).id)
 
         # Повертаємо дію, яка відкриває Pivot/Graph view на згенерованих даних

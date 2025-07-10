@@ -7,11 +7,6 @@ class RentAnalysisReportLine(models.TransientModel):
     _description = 'Rent Analysis Report Line (Transient)'
     _rec_name = 'rental_object_name'  # Для кращого відображення записів
 
-    # Поля, що відповідають виводу вашого методу _get_rent_calculation_for_range,
-    # але "розгорнуті" до рівня рядка.
-    # Кожен запис у цій моделі представлятиме загальний підсумок для об'єкта оренди
-    # за вибраний період.
-
     rental_object_id = fields.Many2one('rent.rental.object', string='Rental Object', readonly=True)
     rental_object_name = fields.Char(string='Rental Object', readonly=True)
 
@@ -26,7 +21,7 @@ class RentAnalysisReportLine(models.TransientModel):
     marketing_amount = fields.Monetary(string='Marketing Amount', currency_field='company_currency_id', readonly=True)
     rent_total = fields.Monetary(string='Total Rent', currency_field='company_currency_id', readonly=True)
 
-    # Ці поля можуть бути корисними для групування в Pivot
+    # group fields for Pivot
     report_year = fields.Integer(string='Year', compute='_compute_report_year_month', store=True)
     report_month = fields.Selection([
         ('1', 'January'), ('2', 'February'), ('3', 'March'), ('4', 'April'),

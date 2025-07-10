@@ -42,17 +42,28 @@
                         </group>
                         <group col='3' >
                             <group string="Rental">
-                                <field name="rental_rate" class="o_input_13ch" widget='monetary' options="{'currency_field': 'rental_rate_currency_id'}"/>
+                                <field name="rental_rate" string="rate"
+                                       class="o_input_13ch"
+                                       widget='monetary'
+                                       options="{'currency_field': 'rental_rate_currency_id'}"/>
                                 <field name="rental_rate_currency_id" string="currency"/>
                                 <field name="rental_rate_tax_id" string="tax"/>
                             </group>
                             <group string="Exploitation">
-                                <field name="exploitation_rate" string="rate"/>
+                                <field name="exploitation_rate"
+                                       string="rate"
+                                       class="o_input_13ch"
+                                       widget='monetary'
+                                       options="{'currency_field': 'exploitation_rate_currency_id'}"/>
                                 <field name="exploitation_rate_currency_id" string="currency"/>
                                 <field name="exploitation_rate_tax_id" string="tax"/>
                             </group>
                             <group string="Marketing">
-                                <field name="marketing_rate" string="rate"/>
+                                <field name="marketing_rate"
+                                       string="rate"
+                                       class="o_input_13ch"
+                                       widget='monetary'
+                                       options="{'currency_field': 'marketing_rate_currency_id'}"/>
                                 <field name="marketing_rate_currency_id" string="currency"/>
                                 <field name="marketing_rate_tax_id" string="tax"/>
                             </group>

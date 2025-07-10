@@ -195,12 +195,24 @@ class RentalObject(models.Model):
                         days_in_segment = (segment_end - temp_start).days + 1
 
                         # Calculate proportional amounts for this segment
+                        rental_tax_indicator = effective_contract.rental_rate_tax_id.amount / 100 \
+                            if effective_contract.rental_rate_tax_id.amount_type == 'percent' \
+                            else 1
                         segment_rental_amount = (
-                                                            effective_contract.rental_rate / current_month_day_count) * days_in_segment
+                                (effective_contract.rental_rate / current_month_day_count) * days_in_segment
+                                * rental_tax_indicator)
+                        exploitation_tax_indicator = effective_contract.exploitation_rate_tax_id.amount / 100 \
+                            if effective_contract.exploitation_rate_tax_id.amount_type == 'percent' \
+                            else 1
                         segment_exploitation_amount = (
-                                                                  effective_contract.exploitation_rate / current_month_day_count) * days_in_segment
+                                (effective_contract.exploitation_rate / current_month_day_count) * days_in_segment
+                                * exploitation_tax_indicator)
+                        marketing_tax_indicator = effective_contract.marketing_rate_tax_id.amount / 100 \
+                            if effective_contract.marketing_rate_tax_id.amount_type == 'percent' \
+                            else 1
                         segment_marketing_amount = (
-                                                               effective_contract.marketing_rate / current_month_day_count) * days_in_segment
+                                (effective_contract.marketing_rate / current_month_day_count) * days_in_segment
+                                *marketing_tax_indicator)
 
                         # Accumulate total original amounts for the full period
                         period_rental_amount += segment_rental_amount
@@ -291,7 +303,4 @@ class RentalObject(models.Model):
 
                 'effective_periods_breakdown': effective_periods_breakdown,
             })
-        _logger.info('=======================================')
-        _logger.info('=======================================')
-        _logger.info(rent_calculations)
         return rent_calculations

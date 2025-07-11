@@ -10,15 +10,6 @@
             </list>
         </field>
     </record>
-<!--        <record id="rent_rental_object_group_tree" model="ir.ui.view">-->
-<!--            <field name="name">rent.rental.object.group.tree ()</field>-->
-<!--            <field name="model">rent.rental.object.group</field>-->
-<!--            <field name="arch" type="xml">-->
-<!--                <tree>-->
-<!--                    <field name="name"/>-->
-<!--                </tree>-->
-<!--            </field>-->
-<!--        </record>-->
 
         <record id="rent_rental_object_group_form" model="ir.ui.view">
             <field name="name">rent.rental.object.group.form ()</field>
@@ -30,9 +21,6 @@
                             <group>
                                 <field name="name"/>
                                 <field name="parent_id"/>
-                            </group>
-                            <group>
-<!--                                <field name="rental_object_ids" widget="many2many_tags"/>-->
                             </group>
                         </group>
                     </sheet>

@@ -1,0 +1,5 @@
+"id","name","parent_id:id"
+"rent_rental_object_group_1","Kyiv",""
+"rent_rental_object_group_2","Retroville","rent_rental_object_group_1"
+"rent_rental_object_group_3","Retroville floor 1","rent_rental_object_group_2"
+"rent_rental_object_group_4","Retroville floor 2","rent_rental_object_group_2"

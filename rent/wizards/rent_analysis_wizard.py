@@ -21,20 +21,14 @@ class RentAnalysisWizard(models.TransientModel):
 
     def action_generate_rent_analysis_report(self):
         """
-        Generates rent analysis data in a transient model and opens a Pivot/Graph view.
+        Generates rent analysis data in a transient model and opens a view.
         """
         self.ensure_one()
-
-        # Очищаємо попередні записи для поточного користувача, якщо вони були
-        # Це не суворо необхідно для transient моделей, але корисно для чистоти
-        # або якщо ви вирішите зробити її звичайною моделлю пізніше.
-        # self.env['rent.analysis.report.line'].search([]).unlink()
 
         report_results = self.env['rent.rental.object']._get_rent_calculation_for_range(
             self.date_from, self.date_to
         )
 
-        # Створюємо записи в transient-моделі
         report_line_ids = []
         company_currency = self.env.company.currency_id  # Отримуємо об'єкт валюти
 
@@ -53,17 +47,16 @@ class RentAnalysisWizard(models.TransientModel):
                 'contract_id': obj_data['contract_id'],
             }).id)
 
-        # Повертаємо дію, яка відкриває Pivot/Graph view на згенерованих даних
         return {
             'name': 'Rent Analysis',
             'type': 'ir.actions.act_window',
             'res_model': 'rent.analysis.report.line',
-            'view_mode': 'pivot,graph',  # Вказуємо порядок view
-            'domain': [('id', 'in', report_line_ids)],  # Показуємо тільки щойно згенеровані записи
-            'target': 'current',  # Відкрити в поточному вікні
+            'view_mode': 'pivot,graph',
+            'domain': [('id', 'in', report_line_ids)],
+            'target': 'current',
             'context': {
-                'search_default_rental_object_id': 1,  # Приклад: групувати за об'єктом за замовчуванням
-                'group_by': ['rental_object_id'],  # Початкове групування
-                'measures': ['rent_total'],  # Початкові виміри
+                'search_default_rental_object_id': 1,
+                'group_by': ['rental_object_id'],
+                'measures': ['rent_total'],
             }
         }

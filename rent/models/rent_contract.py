@@ -72,6 +72,12 @@ class Contract(models.Model):
         comodel_name='account.tax',
         string='Marketing Rate Tax')
 
+    res_partner_id = fields.Many2one(
+        comodel_name='res.partner',
+        string='Partner',
+        help="The partner associated with this contract."
+    )
+
     @api.depends('rental_object_id')
     @api.depends('number')
     @api.depends('date')

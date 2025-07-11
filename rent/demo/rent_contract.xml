@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<odoo noupdate="1">
+    <record id="rent_contract_1" model="rent.contract">
+        <field name="rental_object_id" ref="rent_rental_object_1"/>
+        <field name="number">1</field>
+        <field name="date" eval="DateTime.now() - relativedelta(days=400)"/>
+        <field name="expiration_date" eval="DateTime.now() + relativedelta(days=400)"/>
+        <field name="contract_type">contract</field>
+        <field name="rental_rate">50</field>
+        <field name="exploitation_rate">30</field>
+        <field name="marketing_rate">20</field>
+    </record>
+    <record id="rent_contract_2" model="rent.contract">
+        <field name="rental_object_id" ref="rent_rental_object_1"/>
+        <field name="number">1/2</field>
+        <field name="date" eval="DateTime.now() - relativedelta(days=5)"/>
+        <field name="expiration_date" eval="DateTime.now() + relativedelta(days=5)"/>
+        <field name="contract_type">additional_agreement</field>
+        <field name="rental_rate">100</field>
+        <field name="exploitation_rate">60</field>
+        <field name="marketing_rate">40</field>
+    </record>
+    <record id="rent_contract_3" model="rent.contract">
+        <field name="rental_object_id" ref="rent_rental_object_2"/>
+        <field name="number">2</field>
+        <field name="date" eval="DateTime.now() - relativedelta(days=50)"/>
+        <field name="expiration_date" eval="DateTime.now() + relativedelta(days=50)"/>
+        <field name="contract_type">contract</field>
+        <field name="rental_rate">2000</field>
+        <field name="exploitation_rate">4000</field>
+        <field name="marketing_rate">1000</field>
+    </record>
+</odoo>

@@ -44,6 +44,12 @@ class RentalObject(models.Model):
         string="Actual contract",
     )
 
+    res_country_id = fields.Many2one(
+        comodel_name='res.country',
+        string='Country',
+        help="Country of location of the rental object."
+    )
+
     @api.depends('contract_ids')
     def _compute_actual_contract_number_date(self):
         for record in self:
@@ -109,7 +115,7 @@ class RentalObject(models.Model):
                 ('active', '=', True),
             ], order='date desc, id desc')
 
-            # --- Step 1: Collect all significant dates within the report range ---
+            # Step 1: Collect all significant dates within the report range
             significant_dates = {date_from, date_to + timedelta(days=1)}
 
             for contract in active_contracts:
@@ -121,7 +127,7 @@ class RentalObject(models.Model):
 
             sorted_dates = sorted(list(significant_dates))
 
-            # --- Step 2: Iterate through the intervals defined by significant dates ---
+            # Step 2: Iterate through the intervals defined by significant dates
             for i in range(len(sorted_dates) - 1):
                 interval_start = sorted_dates[i]
                 interval_end = sorted_dates[i + 1] - timedelta(days=1)

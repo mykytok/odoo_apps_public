@@ -6,3 +6,5 @@ from . import rent_abstract_monthly_revenue
 from . import rent_actual_monthly_revenue
 from . import rent_planned_monthly_revenue
 from . import rent_analysis_report_line
+from . import res_partner
+from . import res_country

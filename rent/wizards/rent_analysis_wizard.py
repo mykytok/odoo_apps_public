@@ -44,8 +44,6 @@ class RentAnalysisWizard(models.TransientModel):
                 'rental_object_name': obj_data['rental_object_name'],
                 'date_from': obj_data['date_from'],
                 'date_to': obj_data['date_to'],
-                'report_year': obj_data['report_year'],
-                'report_month': obj_data['report_month'],
                 'report_date': obj_data['report_date'],
                 'company_currency_id': company_currency.id,  # Передаємо ID валюти
                 'rental_amount': obj_data['rental_amount'],

@@ -236,8 +236,6 @@ class RentalObject(models.Model):
                         'rental_object_name': obj.name,
                         'date_from': temp_segment_start.isoformat(),  # This segment's start date
                         'date_to': segment_actual_end.isoformat(),  # This segment's end date
-                        'report_year': temp_segment_start.year,
-                        'report_month': str(temp_segment_start.month),
                         'report_date': end_of_current_month,
                         'days_in_period': days_in_segment,
                         'contract_id': segment_contract_id,

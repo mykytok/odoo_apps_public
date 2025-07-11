@@ -21,14 +21,6 @@ class RentAnalysisReportLine(models.TransientModel):
     marketing_amount = fields.Monetary(string='Marketing Amount', currency_field='company_currency_id', readonly=True)
     rent_total = fields.Monetary(string='Total Rent', currency_field='company_currency_id', readonly=True)
 
-    # group fields for Pivot
-    report_year = fields.Integer(string='Year')
-    report_month = fields.Selection([
-        ('1', 'January'), ('2', 'February'), ('3', 'March'), ('4', 'April'),
-        ('5', 'May'), ('6', 'June'), ('7', 'July'), ('8', 'August'),
-        ('9', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')
-    ], string='Month')
-
     report_date = fields.Date(string='Date')
 
     contract_id = fields.Many2one(comodel_name='rent.contract')

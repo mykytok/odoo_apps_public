@@ -4,52 +4,51 @@
         <field name="model">rent.rental.object.group</field>
         <field name="arch" type="xml">
             <list string="Rental object groups"
-                multi_edit="1"
-                sample="1">
+                  multi_edit="1"
+                  sample="1">
                 <field name="name"/>
             </list>
         </field>
     </record>
 
-        <record id="rent_rental_object_group_form" model="ir.ui.view">
-            <field name="name">rent.rental.object.group.form ()</field>
-            <field name="model">rent.rental.object.group</field>
-            <field name="arch" type="xml">
-                <form>
-                    <sheet>
+    <record id="rent_rental_object_group_form" model="ir.ui.view">
+        <field name="name">rent.rental.object.group.form ()</field>
+        <field name="model">rent.rental.object.group</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
                         <group>
-                            <group>
-                                <field name="name"/>
-                                <field name="parent_id"/>
-                            </group>
+                            <field name="name"/>
+                            <field name="parent_id"/>
                         </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
 
-        <record id="rent_rental_object_group_search" model="ir.ui.view">
-            <field name="name">rent.rental.object.group.search (rent_rental_object_group)</field>
-            <field name="model">rent.rental.object.group</field>
-            <field name="arch" type="xml">
-                <search string="Filters">
-                    <searchpanel>
-                        <field name="parent_id" string="Rental object group" hierarchize="1" select="one"/>
-                    </searchpanel>
-                </search>
-            </field>
-        </record>
+    <record id="rent_rental_object_group_search" model="ir.ui.view">
+        <field name="name">rent.rental.object.group.search (rent_rental_object_group)</field>
+        <field name="model">rent.rental.object.group</field>
+        <field name="arch" type="xml">
+            <search string="Filters">
+                <searchpanel>
+                    <field name="parent_id" string="Rental object group" hierarchize="1" select="one"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
 
-        <record id="action_rent_rental_object_group_window" model="ir.actions.act_window">
-            <field name="name">Rental object group</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">rent.rental.object.group</field>
-            <field name="view_mode">list,form</field>
-        </record>
+    <record id="action_rent_rental_object_group_window" model="ir.actions.act_window">
+        <field name="name">Rental object group</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">rent.rental.object.group</field>
+        <field name="view_mode">list,form</field>
+    </record>
 
-        <menuitem id="rent_menu_rental_object_group"
-                  action="action_rent_rental_object_group_window"
-                  parent="rent_menu_configuration"
-                  name="Rental object group" sequence="200"/>
-
+    <menuitem id="rent_menu_rental_object_group"
+              action="action_rent_rental_object_group_window"
+              parent="rent_menu_configuration"
+              name="Rental object group" sequence="200"/>
 </odoo>

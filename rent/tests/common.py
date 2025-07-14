@@ -1,5 +1,7 @@
-from odoo.tests.common import TransactionCase
 from datetime import date
+
+from odoo.tests.common import TransactionCase
+
 
 class TestRentCommon(TransactionCase):
 

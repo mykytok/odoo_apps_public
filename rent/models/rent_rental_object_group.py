@@ -1,4 +1,4 @@
-from odoo import models, fields, api
+from odoo import models, fields
 
 
 class RentalObjectGroup(models.Model):
@@ -20,4 +20,3 @@ class RentalObjectGroup(models.Model):
         inverse_name='parent_id',
         string='Child rental object groups'
     )
-

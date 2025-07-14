@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from odoo import models, fields, api
 from odoo.tools.misc import format_date
 
@@ -19,8 +17,8 @@ class AbstractMonthlyRevenue(models.AbstractModel):
         comodel_name='rent.cost.center',
         string='Cost center'
     )
-    date = fields.Date(string='Date')
-    revenue = fields.Float(string="Revenue")
+    date = fields.Date()
+    revenue = fields.Float()
 
     @api.depends('cost_center_id')
     @api.depends('date')

@@ -1,5 +1,7 @@
+from datetime import date
+
 from .common import TestRentCommon
-from datetime import date, timedelta
+
 
 class TestRentalObjectSimple(TestRentCommon):
 
@@ -10,12 +12,17 @@ class TestRentalObjectSimple(TestRentCommon):
         # Create a rental object
         rental_object = self.RentalObject.create({'name': 'Office 101', 'area_size': 50.0})
         # Assert that the field is empty without any contracts
-        self.assertIsNone(rental_object.actual_contract_number_date, "Field should be empty without contracts.")
+        self.assertIsNone(rental_object.actual_contract_number_date,
+                          "Field should be empty without contracts.")
 
         # Create the first (older) contract
         self.RentContract.create({
-            'rental_object_id': rental_object.id, 'number': 'C001', 'date': date(2024, 1, 1),
-            'expiration_date': date(2024, 6, 30), 'contract_type': 'contract', 'rental_rate': 100,
+            'rental_object_id': rental_object.id,
+            'number': 'C001',
+            'date': date(2024, 1, 1),
+            'expiration_date': date(2024, 6, 30),
+            'contract_type': 'contract',
+            'rental_rate': 100,
             'rental_rate_currency_id': self.usd_currency.id,
         })
         # Invalidate cache to force re-computation

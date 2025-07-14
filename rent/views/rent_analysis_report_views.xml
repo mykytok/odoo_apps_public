@@ -1,79 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-        <record id="rent_analysis_report_line_list_view" model="ir.ui.view">
-            <field name="name">rent.analysis.report.line.list</field>
-            <field name="model">rent.analysis.report.line</field>
-            <field name="arch" type="xml">
-                <list string="Rent Analysis Report Data">
-                    <field name="rental_object_name"/>
-                    <field name="contract_id"/>
-                    <field name="date_from"/>
-                    <field name="date_to"/>
-                    <field name="report_date" type="col"/>
-                    <field name="rental_amount" sum="Total Rental"/>
-                    <field name="exploitation_amount" sum="Total Exploitation"/>
-                    <field name="marketing_amount" sum="Total Marketing"/>
-                    <field name="rent_total" sum="Grand Total Rent"/>
-                    <field name="company_currency_id" invisible="1"/>
-                </list>
-            </field>
-        </record>
 
-        <record id="rent_analysis_report_line_pivot_view" model="ir.ui.view">
-            <field name="name">rent.analysis.report.line.pivot</field>
-            <field name="model">rent.analysis.report.line</field>
-            <field name="arch" type="xml">
-                <pivot string="Rent Analysis" disable_linking="true">
-                    <field name="rental_object_name" type="row"/>
-                    <field name="contract_id" type="row"/>
-                    <field name="report_date" type="col"/>
-                    <field name="rental_amount" type="measure"/>
-                    <field name="exploitation_amount" type="measure"/>
-                    <field name="marketing_amount" type="measure"/>
-                    <field name="rent_total" type="measure"/>
-                </pivot>
-            </field>
-        </record>
+    <record id="rent_analysis_report_line_list_view" model="ir.ui.view">
+        <field name="name">rent.analysis.report.line.list</field>
+        <field name="model">rent.analysis.report.line</field>
+        <field name="arch" type="xml">
+            <list string="Rent Analysis Report Data">
+                <field name="rental_object_id"/>
+                <field name="contract_id"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="report_date" type="col"/>
+                <field name="rental_amount" sum="Total Rental"/>
+                <field name="exploitation_amount" sum="Total Exploitation"/>
+                <field name="marketing_amount" sum="Total Marketing"/>
+                <field name="rent_total" sum="Grand Total Rent"/>
+                <field name="company_currency_id" invisible="1"/>
+            </list>
+        </field>
+    </record>
 
-        <record id="rent_analysis_report_line_graph_view" model="ir.ui.view">
-            <field name="name">rent.analysis.report.line.graph</field>
-            <field name="model">rent.analysis.report.line</field>
-            <field name="arch" type="xml">
-                <graph string="Rent Analysis Graph" type="bar">
-                    <field name="rental_object_name"/>
-                    <field name="report_date" interval="month"/>
-                    <field name="rent_total" type="measure"/>
-                </graph>
-            </field>
-        </record>
+    <record id="rent_analysis_report_line_pivot_view" model="ir.ui.view">
+        <field name="name">rent.analysis.report.line.pivot</field>
+        <field name="model">rent.analysis.report.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Rent Analysis" disable_linking="true">
+                <field name="rental_object_id" type="row"/>
+                <field name="contract_id" type="row"/>
+                <field name="report_date" type="col"/>
+                <field name="rental_amount" type="measure"/>
+                <field name="exploitation_amount" type="measure"/>
+                <field name="marketing_amount" type="measure"/>
+                <field name="rent_total" type="measure"/>
+            </pivot>
+        </field>
+    </record>
 
-        <record id="rent_analysis_report_line_search_view" model="ir.ui.view">
-            <field name="name">rent.analysis.report.line.search</field>
-            <field name="model">rent.analysis.report.line</field>
-            <field name="arch" type="xml">
-                <search string="Search Rent Analysis">
-                    <field name="rental_object_name"/>
-                    <field name="report_date"/>
+    <record id="rent_analysis_report_line_graph_view" model="ir.ui.view">
+        <field name="name">rent.analysis.report.line.graph</field>
+        <field name="model">rent.analysis.report.line</field>
+        <field name="arch" type="xml">
+            <graph string="Rent Analysis Graph" type="bar">
+                <field name="rental_object_id"/>
+                <field name="report_date" interval="month"/>
+                <field name="rent_total" type="measure"/>
+            </graph>
+        </field>
+    </record>
 
-                    <group expand="0" string="Group By">
-                        <filter name="group_by_rental_object" string="Rental Object" context="{'group_by': 'rental_object_id'}"/>
-                        <filter name="group_by_date" string="Month" context="{'group_by': 'report_date'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
+    <record id="rent_analysis_report_line_search_view" model="ir.ui.view">
+        <field name="name">rent.analysis.report.line.search</field>
+        <field name="model">rent.analysis.report.line</field>
+        <field name="arch" type="xml">
+            <search string="Search Rent Analysis">
+                <group expand="0" string="Group By">
+                    <filter name="group_by_rental_object" string="Rental Object"
+                            context="{'group_by': 'rental_object_id'}"/>
+                    <filter name="group_by_contract_id" string="Contract" context="{'group_by': 'contract_id'}"/>
+                    <filter name="group_by_date" string="Month" context="{'group_by': 'report_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
 
-        <record id="action_rent_analysis_report_data" model="ir.actions.act_window">
-            <field name="name">Rent Analysis</field>
-            <field name="res_model">rent.analysis.report.line</field>
-            <field name="view_mode">pivot,graph,list</field>
-            <field name="help" type="html">
-                <p>
-                    This report allows you to analyze rental data using interactive pivot tables and graphs.
-                </p>
-            </field>
-        </record>
+    <record id="action_rent_analysis_report_data" model="ir.actions.act_window">
+        <field name="name">Rent Analysis</field>
+        <field name="res_model">rent.analysis.report.line</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="help" type="html">
+            <p>
+                This report allows you to analyze rental data using interactive pivot tables and graphs.
+            </p>
+        </field>
+    </record>
 
-    </data>
 </odoo>

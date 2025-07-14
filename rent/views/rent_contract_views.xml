@@ -41,7 +41,7 @@
                                 <field name="expiration_date"/>
                             </group>
                         </group>
-                        <group col='3' >
+                        <group col='3'>
                             <group string="Rental">
                                 <field name="rental_rate" string="rate"
                                        class="o_input_13ch"

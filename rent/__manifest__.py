@@ -8,6 +8,7 @@
 
     'depends': [
         'base',
+        'account',
         'portal'
     ],
 

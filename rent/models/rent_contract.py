@@ -230,13 +230,12 @@ class Contract(models.Model):
         Raises ValidationError if the tax amount type is not 'percent'.
         """
         if tax_id:
-            if tax_id.amount_type == 'percent':
-                return (tax_id.amount / 100) + 1
-            else:
+            if tax_id.amount_type != 'percent':
                 raise ValidationError(_(
                     "Tax '%(tax)s' (ID: %(tax_id)s) has an unsupported amount type '%(amount_type)s'. "
                     "Only 'percent' type taxes are allowed for this calculation."
                 ) % {'tax': tax_id.name, 'tax_id': tax_id.id, 'amount_type': tax_id.amount_type})
+            return (tax_id.amount / 100) + 1
         return 1
 
     @api.model

@@ -66,13 +66,19 @@ class RentalObject(models.Model):
         company_currency = self.env.company.currency_id
 
         for obj in rental_objects:
-            active_contracts = self.env['rent.contract']._get_active_contracts_for_object(obj, date_from, date_to)
-            significant_dates = self.env['rent.contract']._get_significant_dates(date_from, date_to, active_contracts)
+            active_contracts = self.env['rent.contract']._get_active_contracts_for_object(
+                obj, date_from, date_to
+            )
+            significant_dates = self.env['rent.contract']._get_significant_dates(
+                date_from, date_to, active_contracts
+            )
 
-            for interval_start, interval_end in self.env['rent.contract']._generate_intervals(significant_dates,
-                                                                                              date_from, date_to):
-                effective_contract = self.env['rent.contract']._get_effective_contract(active_contracts, interval_start,
-                                                                                       interval_end)
+            for interval_start, interval_end in self.env['rent.contract']._generate_intervals(
+                    significant_dates, date_from, date_to
+            ):
+                effective_contract = self.env['rent.contract']._get_effective_contract(
+                    active_contracts, interval_start, interval_end
+                )
 
                 monthly_segments = self.env['rent.contract']._calculate_monthly_segments(
                     obj, effective_contract, interval_start, interval_end, company_currency

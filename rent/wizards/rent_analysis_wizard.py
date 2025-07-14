@@ -36,17 +36,12 @@ class RentAnalysisWizard(models.TransientModel):
         )
 
         report_line_ids = []
-        company_currency = self.env.company.currency_id  # Отримуємо об'єкт валюти
 
         for obj_data in report_results:
             report_line_ids.append(self.env['rent.analysis.report.line'].create({
                 'rental_object_id': obj_data['rental_object_id'],
                 'contract_id': obj_data['contract_id'],
-                # 'rental_object_name': obj_data['rental_object_name'],
-                # 'date_from': obj_data['date_from'],
-                # 'date_to': obj_data['date_to'],
                 'report_date': obj_data['report_date'],
-                # 'company_currency_id': company_currency.id,
                 'rental_amount': obj_data['rental_amount'],
                 'exploitation_amount': obj_data['exploitation_amount'],
                 'marketing_amount': obj_data['marketing_amount'],

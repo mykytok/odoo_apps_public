@@ -1,94 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-        <record id="action_report_rental_object" model="ir.actions.report">
-            <field name="name">Rental Object Details</field>
-            <field name="model">rent.rental.object</field>
-            <field name="report_type">qweb-pdf</field>
-            <field name="report_name">rent.report_rental_object_document</field>
-            <field name="report_file">rent.report_rental_object_document</field>
-            <field name="binding_model_id" ref="model_rent_rental_object"/>
-            <field name="binding_type">report</field>
-        </record>
+    <record id="action_report_rental_object" model="ir.actions.report">
+        <field name="name">Rental Object Details</field>
+        <field name="model">rent.rental.object</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">rent.report_rental_object_document</field>
+        <field name="report_file">rent.report_rental_object_document</field>
+        <field name="binding_model_id" ref="model_rent_rental_object"/>
+        <field name="binding_type">report</field>
+    </record>
 
-        <template id="report_rental_object_document">
-            <t t-call="web.html_container">
-                <t t-foreach="docs" t-as="o">
-                    <t t-call="web.external_layout">
-                        <div class="page">
-                            <h2>Rental Object: <span t-field="o.name"/></h2>
+    <template id="report_rental_object_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Rental Object:
+                            <span t-field="o.name"/>
+                        </h2>
 
-                            <div class="row mt32 mb32">
-                                <div class="col-6">
-                                    <strong>Rental Object Group:</strong>
-                                    <p t-field="o.rental_object_group_id.name"/>
-                                </div>
-                                <div class="col-6">
-                                    <strong>Area Size:</strong>
-                                    <p><span t-field="o.area_size"/> m²</p>
-                                </div>
+                        <div class="row mt32 mb32">
+                            <div class="col-6">
+                                <strong>Rental Object Group:</strong>
+                                <p t-field="o.rental_object_group_id.name"/>
                             </div>
-
-                            <t t-if="o.contract_ids">
-                                <h3>Contracts</h3>
-                                <table class="table table-sm table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Number</th>
-                                            <th>Date</th>
-                                            <th>Expiration Date</th>
-                                            <th>Type</th>
-                                            <th>Rental Rate</th>
-                                            <th>Exploitation Rate</th>
-                                            <th>Marketing Rate</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <t t-foreach="o.contract_ids.sorted(key=lambda c: c.date, reverse=True)" t-as="contract">
-                                            <tr>
-                                                <td><span t-field="contract.number"/></td>
-                                                <td><span t-field="contract.date"/></td>
-                                                <td><span t-field="contract.expiration_date"/></td>
-                                                <td><span t-field="contract.contract_type"/></td>
-                                                <td><span t-field="contract.rental_rate"/> <span t-field="contract.rental_rate_currency_id.symbol"/> (<span t-field="contract.rental_rate_tax_id.name"/>)</td>
-                                                <td><span t-field="contract.exploitation_rate"/> <span t-field="contract.exploitation_rate_currency_id.symbol"/> (<span t-field="contract.exploitation_rate_tax_id.name"/>)</td>
-                                                <td><span t-field="contract.marketing_rate"/> <span t-field="contract.marketing_rate_currency_id.symbol"/> (<span t-field="contract.marketing_rate_tax_id.name"/>)</td>
-                                            </tr>
-                                        </t>
-                                    </tbody>
-                                </table>
-                            </t>
-                            <t t-else="">
-                                <p>No contracts found.</p>
-                            </t>
-
-                            <t t-if="o.cost_center_ids">
-                                <h3 class="mt32">Cost Centers</h3>
-                                <table class="table table-sm table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Area Size</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <t t-foreach="o.cost_center_ids" t-as="cost_center">
-                                            <tr>
-                                                <td><span t-field="cost_center.name"/></td>
-                                                <td><span t-field="cost_center.area_size"/> m²</td>
-                                            </tr>
-                                        </t>
-                                    </tbody>
-                                </table>
-                            </t>
-                            <t t-else="">
-                                <p>No cost centers found.</p>
-                            </t>
-
+                            <div class="col-6">
+                                <strong>Area Size:</strong>
+                                <p>
+                                    <span t-field="o.area_size"/>
+                                    m²
+                                </p>
                             </div>
-                    </t>
+                        </div>
+
+                        <t t-if="o.contract_ids">
+                            <h3>Contracts</h3>
+                            <table class="table table-sm table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Number</th>
+                                        <th>Date</th>
+                                        <th>Expiration Date</th>
+                                        <th>Type</th>
+                                        <th>Rental Rate</th>
+                                        <th>Exploitation Rate</th>
+                                        <th>Marketing Rate</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="o.contract_ids.sorted(key=lambda c: c.date, reverse=True)"
+                                       t-as="contract">
+                                        <tr>
+                                            <td>
+                                                <span t-field="contract.number"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="contract.date"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="contract.expiration_date"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="contract.contract_type"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="contract.rental_rate"/>
+                                                <span t-field="contract.rental_rate_currency_id.symbol"/>
+                                                (<span t-field="contract.rental_rate_tax_id.name"/>)
+                                            </td>
+                                            <td>
+                                                <span t-field="contract.exploitation_rate"/>
+                                                <span t-field="contract.exploitation_rate_currency_id.symbol"/>
+                                                (<span t-field="contract.exploitation_rate_tax_id.name"/>)
+                                            </td>
+                                            <td>
+                                                <span t-field="contract.marketing_rate"/>
+                                                <span t-field="contract.marketing_rate_currency_id.symbol"/>
+                                                (<span t-field="contract.marketing_rate_tax_id.name"/>)
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+                        <t t-else="">
+                            <p>No contracts found.</p>
+                        </t>
+
+                        <t t-if="o.cost_center_ids">
+                            <h3 class="mt32">Cost Centers</h3>
+                            <table class="table table-sm table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Area Size</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="o.cost_center_ids" t-as="cost_center">
+                                        <tr>
+                                            <td>
+                                                <span t-field="cost_center.name"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="cost_center.area_size"/>
+                                                m²
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+                        <t t-else="">
+                            <p>No cost centers found.</p>
+                        </t>
+
+                    </div>
                 </t>
             </t>
-        </template>
-
+        </t>
+    </template>
 </odoo>

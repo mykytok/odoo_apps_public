@@ -58,10 +58,10 @@ class RentalObject(models.Model):
     @api.model
     def _get_rent_calculation_for_range(self, date_from, date_to):
         """
-        Calculates the rent for each rental object for a given date range.
-        Most of the calculation logic is delegated to the 'rent.contract' model.
+        Calculates and distributes rent data for each rental object
+        to its cost centers for a given date range.
         """
-        rent_calculations_by_month = []
+        distributed_report_data = []
         rental_objects = self.env['rent.rental.object'].search([])
         company_currency = self.env.company.currency_id
 
@@ -69,6 +69,10 @@ class RentalObject(models.Model):
             active_contracts = self.env['rent.contract']._get_active_contracts_for_object(
                 obj, date_from, date_to
             )
+
+            if not active_contracts:
+                continue
+
             significant_dates = self.env['rent.contract']._get_significant_dates(
                 date_from, date_to, active_contracts
             )
@@ -80,9 +84,69 @@ class RentalObject(models.Model):
                     active_contracts, interval_start, interval_end
                 )
 
+                # Calculate the total rent for the entire rental object
                 monthly_segments = self.env['rent.contract']._calculate_monthly_segments(
                     obj, effective_contract, interval_start, interval_end, company_currency
                 )
-                rent_calculations_by_month.extend(monthly_segments)
+                
+                # Distribute the calculated rent to cost centers
+                cost_centers = obj.cost_center_ids.filtered(lambda cc: cc.area_size > 0)
+                total_area = sum(cost_centers.mapped('area_size'))
+                
+                for segment in monthly_segments:
+                    if cost_centers and total_area > 0:
+                        for cost_center in cost_centers:
+                            # Create a new data dictionary for each cost center
+                            segment_with_cc = segment.copy()
+                            coefficient = cost_center.area_size / total_area
+                            
+                            # Apply the coefficient to the amounts
+                            segment_with_cc['rental_amount'] *= coefficient
+                            segment_with_cc['exploitation_amount'] *= coefficient
+                            segment_with_cc['marketing_amount'] *= coefficient
+                            segment_with_cc['rent_total'] *= coefficient
+                            
+                            # Link to the cost center
+                            segment_with_cc['cost_center_id'] = cost_center.id
+                            
+                            distributed_report_data.append(segment_with_cc)
+                    else:
+                        # Fallback for objects without cost centers: add a single line for the object
+                        segment['cost_center_id'] = False # No cost center
+                        distributed_report_data.append(segment)
 
-        return rent_calculations_by_month
+        return distributed_report_data
+    # @api.model
+    # def _get_rent_calculation_for_range(self, date_from, date_to):
+    #     """
+    #     Calculates the rent for each rental object for a given date range.
+    #     Most of the calculation logic is delegated to the 'rent.contract' model.
+    #     """
+    #     rent_calculations_by_month = []
+    #     rental_objects = self.env['rent.rental.object'].search([])
+    #     company_currency = self.env.company.currency_id
+
+    #     for obj in rental_objects:
+    #         active_contracts = self.env['rent.contract']._get_active_contracts_for_object(
+    #             obj, date_from, date_to
+    #         )
+
+    #         if len(active_contracts) == 0: continue
+
+    #         significant_dates = self.env['rent.contract']._get_significant_dates(
+    #             date_from, date_to, active_contracts
+    #         )
+
+    #         for interval_start, interval_end in self.env['rent.contract']._generate_intervals(
+    #                 significant_dates, date_from, date_to
+    #         ):
+    #             effective_contract = self.env['rent.contract']._get_effective_contract(
+    #                 active_contracts, interval_start, interval_end
+    #             )
+
+    #             monthly_segments = self.env['rent.contract']._calculate_monthly_segments(
+    #                 obj, effective_contract, interval_start, interval_end, company_currency
+    #             )
+    #             rent_calculations_by_month.extend(monthly_segments)
+
+    #     return rent_calculations_by_month

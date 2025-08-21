@@ -27,7 +27,7 @@ class RentAnalysisWizard(models.TransientModel):
 
     def action_generate_rent_analysis_report(self):
         """
-        Generates rent analysis data in a transient model and opens a view.
+        Generates rent analysis data and opens a view with the distributed data.
         """
         self.ensure_one()
 
@@ -40,24 +40,68 @@ class RentAnalysisWizard(models.TransientModel):
         for obj_data in report_results:
             report_line_ids.append(self.env['rent.analysis.report.line'].create({
                 'rental_object_id': obj_data['rental_object_id'],
+                'cost_center_id': obj_data.get('cost_center_id'), # Додано cost_center_id
                 'contract_id': obj_data['contract_id'],
                 'report_date': obj_data['report_date'],
                 'rental_amount': obj_data['rental_amount'],
                 'exploitation_amount': obj_data['exploitation_amount'],
                 'marketing_amount': obj_data['marketing_amount'],
                 'rent_total': obj_data['rent_total'],
+                'rental_currency_coef': obj_data['rental_currency_coef'],
+                'exploitation_currency_coef': obj_data['exploitation_currency_coef'],
+                'marketing_currency_coef': obj_data['marketing_currency_coef'],
+                'company_currency_id': self.env.company.currency_id.id, # Додано company_currency_id для коректного відображення
             }).id)
 
         return {
             'name': 'Rent Analysis',
             'type': 'ir.actions.act_window',
             'res_model': 'rent.analysis.report.line',
-            'view_mode': 'pivot,graph',
+            'view_mode': 'pivot, list',
             'domain': [('id', 'in', report_line_ids)],
             'target': 'current',
             'context': {
                 'search_default_rental_object_id': 1,
-                'group_by': ['rental_object_id'],
+                'group_by': ['rental_object_id', 'cost_center_id', 'contract_id'], 
                 'measures': ['rent_total'],
             }
         }
+    # def action_generate_rent_analysis_report(self):
+    #     """
+    #     Generates rent analysis data in a transient model and opens a view.
+    #     """
+    #     self.ensure_one()
+
+    #     report_results = self.env['rent.rental.object']._get_rent_calculation_for_range(
+    #         self.date_from, self.date_to
+    #     )
+
+    #     report_line_ids = []
+
+    #     for obj_data in report_results:
+    #         report_line_ids.append(self.env['rent.analysis.report.line'].create({
+    #             'rental_object_id': obj_data['rental_object_id'],
+    #             'contract_id': obj_data['contract_id'],
+    #             'report_date': obj_data['report_date'],
+    #             'rental_amount': obj_data['rental_amount'],
+    #             'exploitation_amount': obj_data['exploitation_amount'],
+    #             'marketing_amount': obj_data['marketing_amount'],
+    #             'rent_total': obj_data['rent_total'],
+    #             'rental_currency_coef': obj_data['rental_currency_coef'],
+    #             'exploitation_currency_coef': obj_data['exploitation_currency_coef'],
+    #             'marketing_currency_coef': obj_data['marketing_currency_coef'],
+    #         }).id)
+
+    #     return {
+    #         'name': 'Rent Analysis',
+    #         'type': 'ir.actions.act_window',
+    #         'res_model': 'rent.analysis.report.line',
+    #         'view_mode': 'pivot,graph',
+    #         'domain': [('id', 'in', report_line_ids)],
+    #         'target': 'current',
+    #         'context': {
+    #             'search_default_rental_object_id': 1,
+    #             'group_by': ['rental_object_id'],
+    #             'measures': ['rent_total'],
+    #         }
+    #     }

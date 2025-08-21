@@ -187,6 +187,7 @@ class Contract(models.Model):
                                            days_in_segment, current_month_day_count)
                 self._convert_to_company_currency(segment_data, effective_contract,
                                                   company_currency, end_of_current_month)
+                self._apply_currency_coef(segment_data, effective_contract, end_of_current_month)
                 self._set_contract_details(segment_data, effective_contract)
 
             monthly_segments_data.append(segment_data)
@@ -210,6 +211,9 @@ class Contract(models.Model):
             'days_in_period': days_in_segment,
             'contract_id': False,
             'contract_name': 'No Active Contract',
+            'rental_currency_coef': 0.0,
+            'exploitation_currency_coef': 0.0,
+            'marketing_currency_coef': 0.0,
             'original_rental': {'amount': 0.0, 'currency': '', 'tax': ''},
             'original_exploitation': {'amount': 0.0, 'currency': '', 'tax': ''},
             'original_marketing': {'amount': 0.0, 'currency': '', 'tax': ''},
@@ -292,6 +296,47 @@ class Contract(models.Model):
         )
 
     @api.model
+    def _apply_currency_coef(self, segment_data, contract, conversion_date):
+        """
+        Fills in the currency change coefficient
+        from the start of the contract to the current month.
+        """
+        # Pass the ID of the currency recordset, not the recordset itself
+        rental_currency_id = contract.rental_rate_currency_id.id if contract.rental_rate_currency_id else False
+        exploitation_currency_id = contract.exploitation_rate_currency_id.id if contract.exploitation_rate_currency_id else False
+        marketing_currency_id = contract.marketing_rate_currency_id.id if contract.marketing_rate_currency_id else False
+
+        # Check if currency_id is valid before calling the method
+        if rental_currency_id:
+            segment_data['rental_currency_coef'] = self._get_currency_coefficient_for_dates(
+                rental_currency_id, contract.date, conversion_date
+            )
+        else:
+            segment_data['rental_currency_coef'] = 1.0
+
+        if exploitation_currency_id:
+            segment_data['exploitation_currency_coef'] = self._get_currency_coefficient_for_dates(
+                exploitation_currency_id, contract.date, conversion_date
+            )
+        else:
+            segment_data['exploitation_currency_coef'] = 1.0
+
+        if marketing_currency_id:
+            segment_data['marketing_currency_coef'] = self._get_currency_coefficient_for_dates(
+                marketing_currency_id, contract.date, conversion_date
+            )
+        else:
+            segment_data['marketing_currency_coef'] = 1.0
+
+        # The rest of your code for calculations...
+        segment_data['rental_amount'] = (
+                segment_data['rental_amount'] * segment_data['rental_currency_coef'])
+        segment_data['exploitation_amount'] = (
+                segment_data['exploitation_amount'] * segment_data['exploitation_currency_coef'])
+        segment_data['marketing_amount'] = (
+                segment_data['marketing_amount'] * segment_data['marketing_currency_coef'])
+
+    @api.model
     def _set_contract_details(self, segment_data, contract):
         """
         Sets contract-related details in the segment data.
@@ -312,3 +357,43 @@ class Contract(models.Model):
             contract.exploitation_rate_tax_id.name) if contract.exploitation_rate_tax_id else ''
         segment_data['original_marketing']['tax'] = (
             contract.marketing_rate_tax_id.name) if contract.marketing_rate_tax_id else ''
+
+    @api.model
+    def _get_currency_coefficient_for_dates(self, currency_id, date1, date2):
+        """
+        Retrieves the coefficient of a single currency against the company's currency on two specific dates.
+
+        Args:
+            currency_id (int): The ID of the currency to analyze.
+            date1 (date): The first date for which to get the rate.
+            date2 (date): The second date for which to get the rate.
+
+        Returns:
+            float: The currency coefficient, or 1 if the coefficient is less than 1.
+        """
+        # Get the currency object to analyze and the company's currency
+        currency_to_analyze = self.env['res.currency'].browse(currency_id)
+        company_currency = self.env.company.currency_id
+
+        # If the currency doesn't exist, or it is the company's currency, the coefficient is 1.0.
+        if not currency_to_analyze or currency_to_analyze == company_currency:
+            return 1.0
+
+        # Get the rate for the first date: convert 1 unit of the analyzed currency to the company currency
+        rate_date1 = currency_to_analyze.with_context(date=date1).inverse_rate
+
+        # Get the rate for the second date
+        rate_date2 = currency_to_analyze.with_context(date=date2).inverse_rate
+
+        # Avoid division by zero if the first rate is zero
+        if rate_date1 == 0: 
+            return 1.0
+
+        # Calculate the currency coefficient
+        currency_coefficient = rate_date2 / rate_date1
+        
+        # Return the coefficient, or 1 if it's less than 1
+        if currency_coefficient < 1: 
+            return 1.0
+            
+        return currency_coefficient

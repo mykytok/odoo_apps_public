@@ -15,9 +15,6 @@ class RentAnalysisReportLine(models.TransientModel):
         string='Cost Center',
         readonly=True)
 
-    date_from = fields.Date(string='Report Start Date', readonly=True)
-    date_to = fields.Date(string='Report End Date', readonly=True)
-
     company_currency_id = fields.Many2one(
         comodel_name='res.currency',
         string='Currency', readonly=True)
@@ -33,7 +30,8 @@ class RentAnalysisReportLine(models.TransientModel):
         currency_field='company_currency_id',
         readonly=True)
 
-    report_date = fields.Date(string='Date')
+    date_from = fields.Date(string='Date from')
+    date_to = fields.Date(string='Date to')
 
     contract_id = fields.Many2one(comodel_name='rent.contract')
 

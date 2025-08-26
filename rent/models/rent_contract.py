@@ -207,7 +207,6 @@ class Contract(models.Model):
             'rental_object_name': rental_object.name,
             'date_from': segment_start_date.isoformat(),
             'date_to': segment_end_date.isoformat(),
-            'report_date': segment_end_date,
             'days_in_period': days_in_segment,
             'contract_id': False,
             'contract_name': 'No Active Contract',

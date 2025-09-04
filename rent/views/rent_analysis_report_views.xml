@@ -11,6 +11,8 @@
                 <field name="contract_id"/>
                 <field name="date_from"/>
                 <field name="date_to"/>
+                <field name="area_size"/>
+                <field name="indexation_coefficient" digits="[16, 8]"/>
                 <field name="rental_amount" sum="Total Rental"/>
                 <field name="rental_currency_coef" sum="Rental currency coefficient"/>
                 <field name="exploitation_amount" sum="Total Exploitation"/>
@@ -20,6 +22,15 @@
                 <field name="rent_total" sum="Grand Total Rent"/>
                 <field name="company_currency_id" optional="hidden"/>
                 
+                <field name="actual_rental_cost" sum="Actual Rental"/>
+                <field name="actual_exploitation_cost" sum="Actual Exploitation"/>
+                <field name="actual_marketing_cost" sum="Actual Marketing"/>
+                <field name="actual_total_cost" sum="Actual Total"/>
+                
+                <field name="delta_rental" sum="Delta Rental"/>
+                <field name="delta_exploitation" sum="Delta Exploitation"/>
+                <field name="delta_marketing" sum="Delta Marketing"/>
+                <field name="delta_total" sum="Delta Total"/>
             </list>
         </field>
     </record>
@@ -37,6 +48,16 @@
                 <field name="exploitation_amount" type="measure"/>
                 <field name="marketing_amount" type="measure"/>
                 <field name="rent_total" type="measure"/>
+
+                <field name="actual_rental_cost" type="measure"/>
+                <field name="actual_exploitation_cost" type="measure"/>
+                <field name="actual_marketing_cost" type="measure"/>
+                <field name="actual_total_cost" type="measure"/>  
+                            
+                <field name="delta_rental" type="measure"/>
+                <field name="delta_exploitation" type="measure"/>
+                <field name="delta_marketing" type="measure"/>
+                <field name="delta_total" type="measure"/>
             </pivot>
         </field>
     </record>

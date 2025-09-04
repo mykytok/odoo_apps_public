@@ -52,6 +52,17 @@ class RentAnalysisWizard(models.TransientModel):
                 'exploitation_currency_coef': obj_data['exploitation_currency_coef'],
                 'marketing_currency_coef': obj_data['marketing_currency_coef'],
                 'company_currency_id': self.env.company.currency_id.id,
+                'area_size': obj_data['area_size'],
+                'indexation_coefficient': obj_data['indexation_coefficient'],
+                'actual_rental_cost': obj_data['actual_rental_cost'],
+                'actual_exploitation_cost': obj_data['actual_exploitation_cost'],
+                'actual_marketing_cost': obj_data['actual_marketing_cost'],
+                'actual_total_cost': obj_data['actual_total_cost'],
+
+                'delta_rental': obj_data['actual_rental_cost'] - obj_data['rental_amount'],
+                'delta_exploitation': obj_data['actual_exploitation_cost'] - obj_data['exploitation_amount'],
+                'delta_marketing': obj_data['actual_marketing_cost'] - obj_data['marketing_amount'],
+                'delta_total': obj_data['actual_total_cost'] - obj_data['rent_total'],
             }).id)
 
         return {

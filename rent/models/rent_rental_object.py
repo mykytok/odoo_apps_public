@@ -1,3 +1,5 @@
+from datetime import date
+
 from odoo import models, fields, api, _
 from odoo.tools.misc import format_date
 
@@ -16,9 +18,15 @@ class RentalObject(models.Model):
         comodel_name='rent.rental.object.group'
     )
     area_size = fields.Float(
-        string='Area size',
         help="Area of the rental property in square meters."
     )
+
+    rent_indexation = fields.Float(
+        help="Annual indexation (increase) of rent."
+    )
+
+    initial_rent_indexation_date = fields.Date()
+
     contract_ids = fields.One2many(
         comodel_name='rent.contract',
         inverse_name='rental_object_id',
@@ -77,6 +85,27 @@ class RentalObject(models.Model):
                 date_from, date_to, active_contracts
             )
 
+            actual_costs_map = {}
+            for cost in self.env['rent.actual.cost'].search([
+                ('rental_object_id', '=', obj.id),
+                ('date', '>=', date_from),
+                ('date', '<=', date_to)
+            ]):
+                month_key = (cost.date.year, cost.date.month)
+                
+                if month_key not in actual_costs_map:
+                    actual_costs_map[month_key] = {
+                        'rental_cost': 0.0,
+                        'exploitation_cost': 0.0,
+                        'marketing_cost': 0.0,
+                        'total_cost': 0.0,
+                    }
+                
+                actual_costs_map[month_key]['rental_cost'] += cost.rental_cost
+                actual_costs_map[month_key]['exploitation_cost'] += cost.exploitation_cost
+                actual_costs_map[month_key]['marketing_cost'] += cost.marketing_cost
+                actual_costs_map[month_key]['total_cost'] += cost.total_cost
+
             for interval_start, interval_end in self.env['rent.contract']._generate_intervals(
                     significant_dates, date_from, date_to
             ):
@@ -94,6 +123,30 @@ class RentalObject(models.Model):
                 total_area = sum(cost_centers.mapped('area_size'))
                 
                 for segment in monthly_segments:
+
+                    segment_month = (date.fromisoformat(segment['date_from']).year,
+                                     date.fromisoformat(segment['date_from']).month)
+                    
+                    actual_cost_data = actual_costs_map.get(segment_month)
+                    if actual_cost_data:
+                        segment['actual_rental_cost'] = (actual_cost_data['rental_cost'] 
+                                                         * segment['days_in_period'] 
+                                                         / segment['current_month_day_count'])
+                        segment['actual_exploitation_cost'] = (actual_cost_data['exploitation_cost']
+                                                               * segment['days_in_period'] 
+                                                               / segment['current_month_day_count'])
+                        segment['actual_marketing_cost'] = (actual_cost_data['marketing_cost']
+                                                            * segment['days_in_period'] 
+                                                            / segment['current_month_day_count'])
+                        segment['actual_total_cost'] = (actual_cost_data['total_cost']
+                                                        * segment['days_in_period'] 
+                                                        / segment['current_month_day_count'])
+                    else:
+                        segment['actual_rental_cost'] = 0.0
+                        segment['actual_exploitation_cost'] = 0.0
+                        segment['actual_marketing_cost'] = 0.0
+                        segment['actual_total_cost'] = 0.0
+
                     if cost_centers and total_area > 0:
                         for cost_center in cost_centers:
                             # Create a new data dictionary for each cost center
@@ -105,6 +158,12 @@ class RentalObject(models.Model):
                             segment_with_cc['exploitation_amount'] *= coefficient
                             segment_with_cc['marketing_amount'] *= coefficient
                             segment_with_cc['rent_total'] *= coefficient
+
+                            # Apply the coefficient to the actual costs
+                            segment_with_cc['actual_rental_cost'] *= coefficient
+                            segment_with_cc['actual_exploitation_cost'] *= coefficient
+                            segment_with_cc['actual_marketing_cost'] *= coefficient
+                            segment_with_cc['actual_total_cost'] *= coefficient
                             
                             # Link to the cost center
                             segment_with_cc['cost_center_id'] = cost_center.id

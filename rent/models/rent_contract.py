@@ -185,6 +185,8 @@ class Contract(models.Model):
             if effective_contract:
                 self._apply_contract_rates(segment_data, effective_contract,
                                            days_in_segment, current_month_day_count)
+                self._apply_contract_rates(segment_data, effective_contract,
+                                           days_in_segment, current_month_day_count)
                 self._convert_to_company_currency(segment_data, effective_contract,
                                                   company_currency, end_of_current_month)
                 self._apply_currency_coef(segment_data, effective_contract, end_of_current_month)
@@ -208,8 +210,12 @@ class Contract(models.Model):
             'date_from': segment_start_date.isoformat(),
             'date_to': segment_end_date.isoformat(),
             'days_in_period': days_in_segment,
+            'current_month_day_count': calendar.monthrange(segment_start_date.year,
+                                                          segment_start_date.month)[1],
             'contract_id': False,
             'contract_name': 'No Active Contract',
+            'area_size': rental_object.area_size,
+            'indexation_coefficient': 0.0,
             'rental_currency_coef': 0.0,
             'exploitation_currency_coef': 0.0,
             'marketing_currency_coef': 0.0,
@@ -242,14 +248,78 @@ class Contract(models.Model):
         return 1
 
     @api.model
+    def _get_rent_indexation_coefficient(self, rental_object, calc_date):
+        """
+        Calculates the rent indexation coefficient, applying the first indexation
+        immediately on initial_rent_indexation_date and compounding annually thereafter.
+        
+        Args:
+            rental_object (odoo.models): The rental object record.
+            calc_date (datetime.date): The date of the current rent calculation segment.
+
+        Returns:
+            float: The indexation coefficient, or 1.0 if no indexation applies yet.
+        """
+
+        last_day_of_month = calendar.monthrange(calc_date.year, calc_date.month)[1]
+        repot_date = date(calc_date.year, calc_date.month, last_day_of_month)
+
+
+        if not rental_object.initial_rent_indexation_date or not rental_object.rent_indexation:
+            return 1.0
+
+        initial_date = rental_object.initial_rent_indexation_date
+        indexation_rate = rental_object.rent_indexation / 100.0
+        
+        # If the date is before the initial indexation date, no indexation
+        if repot_date < initial_date:
+            return 1.0
+
+        # Calculate the number of full years passed since the initial date
+        years_for_indexation = (repot_date.year - initial_date.year)
+        
+        # Add 1 to the count if the segment date has reached or passed the anniversary of the initial date
+        if (repot_date.month, repot_date.day) >= (initial_date.month, initial_date.day):
+            years_for_indexation += 1
+            
+        # The first year has a coefficient of 1 + indexation_rate
+        # Example: initial_date = 2024-05-15, date = 2024-05-16
+        # years_for_indexation = (2024-2024) + 1 = 1.
+        # So the coefficient is (1 + 0.05)**1 = 1.05
+        # Example: initial_date = 2024-05-15, date = 2025-05-16
+        # years_for_indexation = (2025-2024) + 1 = 2.
+        # So the coefficient is (1 + 0.05)**2 = 1.1025
+        
+        # Calculate the compound indexation coefficient
+        return (1 + indexation_rate) ** years_for_indexation
+    
+    @api.model
     def _apply_contract_rates(self, segment_data, contract, days_in_segment, current_month_day_count):
         """
         Calculates original amounts for rental, exploitation, and marketing
         based on the effective contract and applies tax indicators.
         """
+
+        rental_object = self.env['rent.rental.object'].browse(segment_data['rental_object_id'])
+
         rental_tax_indicator = self._apply_tax_indicator(contract.rental_rate_tax_id)
+
+        # Convert date string back to a date object for comparison
+        repot_date = date.fromisoformat(segment_data['date_from'])
+
+        # Get the rent indexation coefficient for the current segment date
+        indexation_coefficient = self._get_rent_indexation_coefficient(
+            rental_object,
+            repot_date
+        )
+        segment_data['indexation_coefficient'] = indexation_coefficient
+
         segment_data['original_rental']['amount'] = (
-                (contract.rental_rate / current_month_day_count) * days_in_segment * rental_tax_indicator
+                (contract.rental_rate / current_month_day_count) 
+                * days_in_segment 
+                * rental_tax_indicator 
+                * segment_data['area_size']
+                * indexation_coefficient
         )
 
         exploitation_tax_indicator = self._apply_tax_indicator(contract.exploitation_rate_tax_id)
@@ -257,12 +327,17 @@ class Contract(models.Model):
                 (contract.exploitation_rate / current_month_day_count)
                 * days_in_segment
                 * exploitation_tax_indicator
+                * segment_data['area_size']
+                * indexation_coefficient
         )
 
         marketing_tax_indicator = self._apply_tax_indicator(contract.marketing_rate_tax_id)
         segment_data['original_marketing']['amount'] = (
                 (contract.marketing_rate / current_month_day_count)
-                * days_in_segment * marketing_tax_indicator
+                * days_in_segment 
+                * marketing_tax_indicator
+                * segment_data['area_size']
+                * indexation_coefficient
         )
 
     @api.model

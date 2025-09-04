@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class RentAnalysisReportLine(models.TransientModel):
@@ -17,7 +17,10 @@ class RentAnalysisReportLine(models.TransientModel):
 
     company_currency_id = fields.Many2one(
         comodel_name='res.currency',
-        string='Currency', readonly=True)
+        string='Currency', 
+        readonly=True,
+        default=lambda self: self.env.company.currency_id.id,
+    )
 
     rental_amount = fields.Monetary(currency_field='company_currency_id',
                                     readonly=True)
@@ -35,6 +38,14 @@ class RentAnalysisReportLine(models.TransientModel):
 
     contract_id = fields.Many2one(comodel_name='rent.contract')
 
+    area_size = fields.Float(
+        help="Area of the rental property in square meters."
+    )
+
+    indexation_coefficient = fields.Float(
+        help="Annual indexation (increase) of rent."
+    )
+
     rental_currency_coef = fields.Float(
         string='Rental currency coefficient',
         help="Currency change coefficient from the start of the contract to the current month."
@@ -47,3 +58,56 @@ class RentAnalysisReportLine(models.TransientModel):
         string='Marketing currency coefficient',
         help="Currency change coefficient from the start of the contract to the current month."
     )
+
+    actual_rental_cost = fields.Monetary(
+        string='Actual Rental Cost',
+        currency_field='company_currency_id',
+        readonly=True
+    )
+    actual_exploitation_cost = fields.Monetary(
+        string='Actual Exploitation Cost',
+        currency_field='company_currency_id',
+        readonly=True
+    )
+    actual_marketing_cost = fields.Monetary(
+        string='Actual Marketing Cost',
+        currency_field='company_currency_id',
+        readonly=True
+    )
+    actual_total_cost = fields.Monetary(
+        string='Actual Total Cost',
+        currency_field='company_currency_id',
+        readonly=True
+    )
+    
+    delta_rental = fields.Monetary(
+        string='Delta Rental',
+        currency_field='company_currency_id',
+        # compute='_compute_delta_costs',
+    )
+    delta_exploitation = fields.Monetary(
+        string='Delta Exploitation',
+        currency_field='company_currency_id',
+        # compute='_compute_delta_costs',
+    )
+    delta_marketing = fields.Monetary(
+        string='Delta Marketing',
+        currency_field='company_currency_id',
+        # compute='_compute_delta_costs',
+    )
+    delta_total = fields.Monetary(
+        string='Delta Total',
+        currency_field='company_currency_id',
+        # compute='_compute_delta_costs',
+    )
+
+    @api.depends('rental_amount', 'actual_rental_cost',
+                 'exploitation_amount', 'actual_exploitation_cost',
+                 'marketing_amount', 'actual_marketing_cost',
+                 'rent_total', 'actual_total_cost')
+    def _compute_delta_costs(self):
+        for rec in self:
+            rec.delta_rental = rec.rental_amount - rec.actual_rental_cost
+            rec.delta_exploitation = rec.exploitation_amount - rec.actual_exploitation_cost
+            rec.delta_marketing = rec.marketing_amount - rec.actual_marketing_cost
+            rec.delta_total = rec.rent_total - rec.actual_total_cost

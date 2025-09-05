@@ -3,11 +3,11 @@
         <field name="name">rent.planned.monthly.revenue.list</field>
         <field name="model">rent.planned.monthly.revenue</field>
         <field name="arch" type="xml">
-            <list default_order="date desc" editable="top" multi_edit="1">
+            <tree default_order="date desc" editable="top" multi_edit="1">
                 <field name="cost_center_id"/>
                 <field name="date"/>
                 <field name="revenue"/>
-            </list>
+            </tree>
         </field>
     </record>
 
@@ -15,7 +15,7 @@
         <field name="name">Planned monthly revenue</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">rent.planned.monthly.revenue</field>
-        <field name="view_mode">list</field>
+        <field name="view_mode">tree</field>
     </record>
 
     <menuitem id="rent_menu_planned_monthly_revenue"

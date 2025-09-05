@@ -5,7 +5,7 @@
         <field name="name">rent.contract.list</field>
         <field name="model">rent.contract</field>
         <field name="arch" type="xml">
-            <list>
+            <tree>
                 <field name="name"/>
                 <field name="rental_object_id"/>
                 <field name="contract_type"/>
@@ -17,7 +17,7 @@
                        options="{'currency_field': 'marketing_rate_currency_id'}"/>
                 <field name="marketing_rate" widget='monetary'
                        options="{'currency_field': 'marketing_rate_currency_id'}"/>
-            </list>
+            </tree>
         </field>
     </record>
 
@@ -91,7 +91,7 @@
         <field name="name">Contract</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">rent.contract</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">tree,form</field>
     </record>
 
     <menuitem id="rent_menu_contract"

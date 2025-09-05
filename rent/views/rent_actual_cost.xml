@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_rent_actual_cost_list" model="ir.ui.view">
+        <field name="name">rent.actual.cost.list</field>
+        <field name="model">rent.actual.cost</field>
+        <field name="arch" type="xml">
+            <tree string="Actual Rent Costs">
+                <field name="name"/>
+                <field name="rental_object_id"/>
+                <field name="date"/>
+                <field name="rental_cost" widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
+                <field name="exploitation_cost" widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
+                <field name="marketing_cost" widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
+                <field name="total_cost" widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
+                <field name="company_currency_id" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_rent_actual_cost_form" model="ir.ui.view">
+        <field name="name">rent.actual.cost.form</field>
+        <field name="model">rent.actual.cost</field>
+        <field name="arch" type="xml">
+            <form string="Actual Rent Cost">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="rental_object_id"/>
+                            <field name="date"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Costs">
+                            <group>
+                                <field name="rental_cost" widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
+                                <field name="exploitation_cost" widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
+                                <field name="marketing_cost" widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
+                            </group>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="total_cost" widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rent_actual_cost_search" model="ir.ui.view">
+        <field name="name">rent.actual.cost.search</field>
+        <field name="model">rent.actual.cost</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Description"/>
+                <field name="rental_object_id"/>
+                <filter string="This Month" name="filter_this_month" domain="[('date', '&gt;=', datetime.datetime.now().replace(day=1).strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Rental Object" name="rental_object_id" context="{'group_by':'rental_object_id'}"/>
+                    <filter string="Date" name="date_month" context="{'group_by':'date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rent_actual_cost_window" model="ir.actions.act_window">
+        <field name="name">Actual Rent Costs</field>
+        <field name="res_model">rent.actual.cost</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="rent_menu_actual_cost"
+              action="action_rent_actual_cost_window"
+              parent="menu_rent_rental_objects"
+              name="Actual Costs"
+              sequence="300"/>
+
+</odoo>

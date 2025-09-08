@@ -1,0 +1,1081 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* rent
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-09-07 15:37+0000\n"
+"PO-Revision-Date: 2025-09-07 15:37+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: rent
+#. odoo-python
+#: code:addons/rent/models/rent_rental_object.py:0
+#, python-format
+msgid "#%(a)s from %(b)s"
+msgstr "#%(a)s від %(b)s"
+
+#. module: rent
+#. odoo-python
+#: code:addons/rent/models/rent_contract.py:0
+#, python-format
+msgid "#%(number)s from %(date)s to %(expiration_date)s (%(rental_object)s)"
+msgstr "#%(number)s від %(date)s до %(expiration_date)s (%(rental_object)s)"
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.report_rental_object_document
+msgid "<strong>Area Size:</strong>"
+msgstr "<strong>Площа:</strong>"
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.report_rental_object_document
+msgid "<strong>Rental Object Group:</strong>"
+msgstr "<strong>Група об'єктів оренди:</strong>"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__access_warning
+msgid "Access warning"
+msgstr "Попередження про доступ"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__message_needaction
+msgid "Action Needed"
+msgstr "Необхідні дії"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_abstract_monthly_revenue__active
+#: model:ir.model.fields,field_description:rent.field_rent_actual_monthly_revenue__active
+#: model:ir.model.fields,field_description:rent.field_rent_contract__active
+#: model:ir.model.fields,field_description:rent.field_rent_cost_center__active
+#: model:ir.model.fields,field_description:rent.field_rent_planned_monthly_revenue__active
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__active
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object_group__active
+msgid "Active"
+msgstr "Активний"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__activity_ids
+msgid "Activities"
+msgstr ""
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__activity_state
+msgid "Activity State"
+msgstr ""
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__activity_type_icon
+msgid "Activity Type Icon"
+msgstr ""
+
+#. module: rent
+#: model:ir.ui.menu,name:rent.rent_menu_actual_cost
+msgid "Actual Costs"
+msgstr "Фактичні витрати"
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.rent_analysis_report_line_list_view
+msgid "Actual Exploitation"
+msgstr "Експлуатаційні (факт)"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_actual_cost__exploitation_cost
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__actual_exploitation_cost
+msgid "Actual Exploitation Cost"
+msgstr "Фактичні експлуатаційні витрати"
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.rent_analysis_report_line_list_view
+msgid "Actual Marketing"
+msgstr "Маркетинг (факт)"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_actual_cost__marketing_cost
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__actual_marketing_cost
+msgid "Actual Marketing Cost"
+msgstr "Фактичні маркетингові витрати"
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.view_rent_actual_cost_form
+msgid "Actual Rent Cost"
+msgstr "Фактичні орендні витрати"
+
+#. module: rent
+#: model:ir.actions.act_window,name:rent.action_rent_actual_cost_window
+#: model:ir.model,name:rent.model_rent_actual_cost
+#: model_terms:ir.ui.view,arch_db:rent.view_rent_actual_cost_list
+msgid "Actual Rent Costs"
+msgstr "Фактичні орендні витрати"
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.rent_analysis_report_line_list_view
+msgid "Actual Rental"
+msgstr "Аренда (факт)"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_actual_cost__rental_cost
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__actual_rental_cost
+msgid "Actual Rental Cost"
+msgstr "Фактичні орендні витрати"
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.rent_analysis_report_line_list_view
+msgid "Actual Total"
+msgstr "Всього (факт)"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_actual_cost__total_cost
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__actual_total_cost
+msgid "Actual Total Cost"
+msgstr "Всього витрат (факт)"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__actual_contract_number_date
+msgid "Actual contract"
+msgstr "Договір"
+
+#. module: rent
+#: model:ir.model.constraint,message:rent.constraint_rent_actual_cost_unique_date_rental_object
+msgid "Actual costs for this rental object already exist for this date."
+msgstr "Фактичні витрати цього об'єкта оренди вже внесені на цю дату."
+
+#. module: rent
+#: model:ir.actions.act_window,name:rent.action_rent_actual_monthly_revenue_window
+#: model:ir.model,name:rent.model_rent_actual_monthly_revenue
+#: model:ir.model.fields,field_description:rent.field_rent_cost_center__actual_monthly_revenue_ids
+#: model:ir.ui.menu,name:rent.rent_menu_actual_monthly_revenue
+msgid "Actual monthly revenue"
+msgstr "Щомісячний дохід (факт)"
+
+#. module: rent
+#: model:ir.model.fields.selection,name:rent.selection__rent_contract__contract_type__additional_agreement
+msgid "Additional agreement"
+msgstr "Додаткова угода"
+
+#. module: rent
+#: model:res.groups,comment:rent.group_rent_admin
+msgid "Admin of Rent"
+msgstr "Адміністратор Оренда"
+
+#. module: rent
+#: model:ir.model.fields,help:rent.field_rent_analysis_report_line__indexation_coefficient
+#: model:ir.model.fields,help:rent.field_rent_rental_object__rent_indexation
+msgid "Annual indexation (increase) of rent."
+msgstr "Щорічна індексація (збільшення) орендної плати."
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__area_size
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__area_size
+#: model_terms:ir.ui.view,arch_db:rent.report_rental_object_document
+msgid "Area Size"
+msgstr "Площа"
+
+#. module: rent
+#: model:ir.model.fields,help:rent.field_rent_cost_center__area_size
+msgid "Area of the cost center in square meters."
+msgstr "Площа центру витрат у квадратних метрах."
+
+#. module: rent
+#: model:ir.model.fields,help:rent.field_rent_analysis_report_line__area_size
+#: model:ir.model.fields,help:rent.field_rent_rental_object__area_size
+msgid "Area of the rental property in square meters."
+msgstr "Площа орендованої нерухомості в квадратних метрах."
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_cost_center__area_size
+msgid "Area size"
+msgstr "Площа"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__message_attachment_count
+msgid "Attachment Count"
+msgstr "Кількість вкладень"
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.rent_analysis_wizard_form_view
+msgid "Cancel"
+msgstr "Відміна"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object_group__child_id
+msgid "Child rental object groups"
+msgstr "Групи дочірніх об'єктів оренди"
+
+#. module: rent
+#: model:ir.ui.menu,name:rent.rent_menu_configuration
+msgid "Configuration"
+msgstr "Конфігурація"
+
+#. module: rent
+#: model:ir.model,name:rent.model_res_partner
+msgid "Contact"
+msgstr "Контакт"
+
+#. module: rent
+#: model:ir.actions.act_window,name:rent.action_rent_contract_window
+#: model:ir.model,name:rent.model_rent_contract
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__contract_id
+#: model:ir.model.fields.selection,name:rent.selection__rent_contract__contract_type__contract
+#: model:ir.ui.menu,name:rent.rent_menu_contract
+#: model_terms:ir.ui.view,arch_db:rent.rent_analysis_report_line_search_view
+msgid "Contract"
+msgstr "Договір"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__contract_ids
+#: model_terms:ir.ui.view,arch_db:rent.rent_rental_object_form
+#: model_terms:ir.ui.view,arch_db:rent.report_rental_object_document
+msgid "Contracts"
+msgstr "Договори"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__cost_center_id
+msgid "Cost Center"
+msgstr "Центр витрат"
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.report_rental_object_document
+msgid "Cost Centers"
+msgstr "Центри витрат"
+
+#. module: rent
+#: model:ir.actions.act_window,name:rent.action_rent_cost_center_window
+#: model:ir.model,name:rent.model_rent_cost_center
+#: model:ir.model.fields,field_description:rent.field_rent_abstract_monthly_revenue__cost_center_id
+#: model:ir.model.fields,field_description:rent.field_rent_actual_monthly_revenue__cost_center_id
+#: model:ir.model.fields,field_description:rent.field_rent_planned_monthly_revenue__cost_center_id
+#: model:ir.ui.menu,name:rent.rent_menu_cost_center
+msgid "Cost center"
+msgstr "Центр витрат"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__cost_center_ids
+#: model_terms:ir.ui.view,arch_db:rent.rent_rental_object_form
+msgid "Cost centers"
+msgstr "Центри витрат"
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.view_rent_actual_cost_form
+msgid "Costs"
+msgstr "Витрати"
+
+#. module: rent
+#: model:ir.model,name:rent.model_res_country
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__res_country_id
+msgid "Country"
+msgstr "Країна"
+
+#. module: rent
+#: model:ir.model.fields,help:rent.field_rent_rental_object__res_country_id
+msgid "Country of location of the rental object."
+msgstr "Країна розташування об'єкта оренди."
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_actual_cost__create_uid
+#: model:ir.model.fields,field_description:rent.field_rent_actual_monthly_revenue__create_uid
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__create_uid
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_wizard__create_uid
+#: model:ir.model.fields,field_description:rent.field_rent_contract__create_uid
+#: model:ir.model.fields,field_description:rent.field_rent_cost_center__create_uid
+#: model:ir.model.fields,field_description:rent.field_rent_planned_monthly_revenue__create_uid
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__create_uid
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object_group__create_uid
+msgid "Created by"
+msgstr "Автор"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_actual_cost__create_date
+#: model:ir.model.fields,field_description:rent.field_rent_actual_monthly_revenue__create_date
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__create_date
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_wizard__create_date
+#: model:ir.model.fields,field_description:rent.field_rent_contract__create_date
+#: model:ir.model.fields,field_description:rent.field_rent_cost_center__create_date
+#: model:ir.model.fields,field_description:rent.field_rent_planned_monthly_revenue__create_date
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__create_date
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object_group__create_date
+msgid "Created on"
+msgstr "Дата створення"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_actual_cost__company_currency_id
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__company_currency_id
+msgid "Currency"
+msgstr "Валюта"
+
+#. module: rent
+#: model:ir.model.fields,help:rent.field_rent_analysis_report_line__exploitation_currency_coef
+#: model:ir.model.fields,help:rent.field_rent_analysis_report_line__marketing_currency_coef
+#: model:ir.model.fields,help:rent.field_rent_analysis_report_line__rental_currency_coef
+msgid ""
+"Currency change coefficient from the start of the contract to the current "
+"month."
+msgstr ""
+"Коефіцієнт зміни курсу валюти з початку дії контракту до поточного "
+"місяця."
+
+#. module: rent
+#: model:ir.model.fields,help:rent.field_rent_rental_object__access_url
+msgid "Customer Portal URL"
+msgstr "URL-адреса порталу клієнта"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_abstract_monthly_revenue__date
+#: model:ir.model.fields,field_description:rent.field_rent_actual_cost__date
+#: model:ir.model.fields,field_description:rent.field_rent_actual_monthly_revenue__date
+#: model:ir.model.fields,field_description:rent.field_rent_contract__date
+#: model:ir.model.fields,field_description:rent.field_rent_planned_monthly_revenue__date
+#: model_terms:ir.ui.view,arch_db:rent.report_rental_object_document
+#: model_terms:ir.ui.view,arch_db:rent.view_rent_actual_cost_search
+msgid "Date"
+msgstr "Дата"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_wizard__date_from
+msgid "Date From"
+msgstr "Дата початку"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_wizard__date_to
+msgid "Date To"
+msgstr "Дата закінчення"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__date_from
+msgid "Date from"
+msgstr "Дата початку"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__date_to
+msgid "Date to"
+msgstr "Дата закінчення"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__delta_exploitation
+#: model_terms:ir.ui.view,arch_db:rent.rent_analysis_report_line_list_view
+msgid "Delta Exploitation"
+msgstr "Різниця Експлуатація"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__delta_marketing
+#: model_terms:ir.ui.view,arch_db:rent.rent_analysis_report_line_list_view
+msgid "Delta Marketing"
+msgstr "Різниця Маркетинг"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__delta_rental
+#: model_terms:ir.ui.view,arch_db:rent.rent_analysis_report_line_list_view
+msgid "Delta Rental"
+msgstr "Різниця Оренда"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__delta_total
+#: model_terms:ir.ui.view,arch_db:rent.rent_analysis_report_line_list_view
+msgid "Delta Total"
+msgstr "Різниця Всього"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_actual_cost__name
+#: model_terms:ir.ui.view,arch_db:rent.view_rent_actual_cost_search
+msgid "Description"
+msgstr "Опис"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_actual_cost__display_name
+#: model:ir.model.fields,field_description:rent.field_rent_actual_monthly_revenue__display_name
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__display_name
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_wizard__display_name
+#: model:ir.model.fields,field_description:rent.field_rent_contract__display_name
+#: model:ir.model.fields,field_description:rent.field_rent_cost_center__display_name
+#: model:ir.model.fields,field_description:rent.field_rent_planned_monthly_revenue__display_name
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__display_name
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object_group__display_name
+msgid "Display Name"
+msgstr "Відображуване ім'я"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_contract__expiration_date
+#: model_terms:ir.ui.view,arch_db:rent.report_rental_object_document
+msgid "Expiration Date"
+msgstr "Термін дії"
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.rent_contract_form
+msgid "Exploitation"
+msgstr "Експлуатація"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__exploitation_amount
+msgid "Exploitation Amount"
+msgstr "Експлуатація Сума"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_contract__exploitation_rate
+#: model_terms:ir.ui.view,arch_db:rent.report_rental_object_document
+msgid "Exploitation Rate"
+msgstr "Експлуатаційна Ставка"
+
+#. module: rent
+#: model:ir.model.fields,help:rent.field_rent_contract__exploitation_rate
+msgid "Exploitation Rate (Monthly)."
+msgstr "Експлуатаційна Ставка (Місячна)."
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_contract__exploitation_rate_currency_id
+msgid "Exploitation Rate Currency"
+msgstr "Експлуатація Валюта Ставки"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_contract__exploitation_rate_tax_id
+msgid "Exploitation Rate Tax"
+msgstr "Експлуатація Податкова Ставка"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__exploitation_currency_coef
+#: model_terms:ir.ui.view,arch_db:rent.rent_analysis_report_line_list_view
+msgid "Exploitation currency coefficient"
+msgstr "Експлуатація Валютний Коефіцієнт"
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.rent_contract_search
+#: model_terms:ir.ui.view,arch_db:rent.rent_rental_object_group_search
+#: model_terms:ir.ui.view,arch_db:rent.rent_rental_object_search
+msgid "Filters"
+msgstr "Фільтри"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__message_follower_ids
+msgid "Followers"
+msgstr "Підписники"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Підписники (Партнери)"
+
+#. module: rent
+#: model:ir.model.fields,help:rent.field_rent_rental_object__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr ""
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.rent_analysis_wizard_form_view
+msgid "Generate Report"
+msgstr "Згенерувати Звіт"
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.rent_analysis_report_line_list_view
+msgid "Grand Total Rent"
+msgstr "Загальна Сума Орендної Плати"
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.rent_rental_object_search
+msgid "Group"
+msgstr "Група"
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.rent_analysis_report_line_search_view
+#: model_terms:ir.ui.view,arch_db:rent.view_rent_actual_cost_search
+msgid "Group By"
+msgstr "Групувати За"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__has_message
+msgid "Has Message"
+msgstr "Наявне Повідомлення"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_actual_cost__id
+#: model:ir.model.fields,field_description:rent.field_rent_actual_monthly_revenue__id
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__id
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_wizard__id
+#: model:ir.model.fields,field_description:rent.field_rent_contract__id
+#: model:ir.model.fields,field_description:rent.field_rent_cost_center__id
+#: model:ir.model.fields,field_description:rent.field_rent_planned_monthly_revenue__id
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__id
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object_group__id
+msgid "ID"
+msgstr ""
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__activity_exception_icon
+msgid "Icon"
+msgstr ""
+
+#. module: rent
+#: model:ir.model.fields,help:rent.field_rent_rental_object__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr ""
+
+#. module: rent
+#: model:ir.model.fields,help:rent.field_rent_rental_object__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: rent
+#: model:ir.model.fields,help:rent.field_rent_rental_object__message_has_error
+#: model:ir.model.fields,help:rent.field_rent_rental_object__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__indexation_coefficient
+msgid "Indexation Coefficient"
+msgstr "Коефіцієнт Індексації"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__initial_rent_indexation_date
+msgid "Initial Rent Indexation Date"
+msgstr "Дата Початку Індексації Орендної Плати"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__message_is_follower
+msgid "Is Follower"
+msgstr "Підписник"
+
+#. module: rent
+#: model:rent.rental.object.group,name:rent.rent_rental_object_group_1
+msgid "Kyiv"
+msgstr "Київ"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_actual_cost__write_uid
+#: model:ir.model.fields,field_description:rent.field_rent_actual_monthly_revenue__write_uid
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__write_uid
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_wizard__write_uid
+#: model:ir.model.fields,field_description:rent.field_rent_contract__write_uid
+#: model:ir.model.fields,field_description:rent.field_rent_cost_center__write_uid
+#: model:ir.model.fields,field_description:rent.field_rent_planned_monthly_revenue__write_uid
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__write_uid
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object_group__write_uid
+msgid "Last Updated by"
+msgstr "Автор Останнього Оновлення"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_actual_cost__write_date
+#: model:ir.model.fields,field_description:rent.field_rent_actual_monthly_revenue__write_date
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__write_date
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_wizard__write_date
+#: model:ir.model.fields,field_description:rent.field_rent_contract__write_date
+#: model:ir.model.fields,field_description:rent.field_rent_cost_center__write_date
+#: model:ir.model.fields,field_description:rent.field_rent_planned_monthly_revenue__write_date
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__write_date
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object_group__write_date
+msgid "Last Updated on"
+msgstr "Дата Останнього Оновлення"
+
+#. module: rent
+#: model:ir.model.fields.selection,name:rent.selection__rent_contract__contract_type__main_additional_agreement
+msgid "Main additional agreement"
+msgstr "Головна додаткова угода"
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.rent_contract_form
+msgid "Marketing"
+msgstr "Маркетинг"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__marketing_amount
+msgid "Marketing Amount"
+msgstr "Маркетинг Сума"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_contract__marketing_rate
+#: model_terms:ir.ui.view,arch_db:rent.report_rental_object_document
+msgid "Marketing Rate"
+msgstr "Маркетингова Ставка"
+
+#. module: rent
+#: model:ir.model.fields,help:rent.field_rent_contract__marketing_rate
+msgid "Marketing Rate (Monthly)."
+msgstr "Маркетингова Ставка (Місячна)."
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_contract__marketing_rate_currency_id
+msgid "Marketing Rate Currency"
+msgstr "Маркетинг Валюта Ставки"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_contract__marketing_rate_tax_id
+msgid "Marketing Rate Tax"
+msgstr "Маркетинг Податкова Ставка"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__marketing_currency_coef
+#: model_terms:ir.ui.view,arch_db:rent.rent_analysis_report_line_list_view
+msgid "Marketing currency coefficient"
+msgstr "Маркетинг Валютний Коефіцієнт"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__message_ids
+msgid "Messages"
+msgstr ""
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.rent_analysis_report_line_search_view
+msgid "Month"
+msgstr "Місяць"
+
+#. module: rent
+#: model:ir.model,name:rent.model_rent_abstract_monthly_revenue
+msgid "Monthly revenue"
+msgstr "Щомісячний дохід"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr ""
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_abstract_monthly_revenue__name
+#: model:ir.model.fields,field_description:rent.field_rent_actual_monthly_revenue__name
+#: model:ir.model.fields,field_description:rent.field_rent_contract__name
+#: model:ir.model.fields,field_description:rent.field_rent_cost_center__name
+#: model:ir.model.fields,field_description:rent.field_rent_planned_monthly_revenue__name
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__name
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object_group__name
+#: model_terms:ir.ui.view,arch_db:rent.report_rental_object_document
+msgid "Name"
+msgstr "Ім'я"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__activity_summary
+msgid "Next Activity Summary"
+msgstr ""
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__activity_type_id
+msgid "Next Activity Type"
+msgstr ""
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.report_rental_object_document
+msgid "No contracts found."
+msgstr "Договорів не знайдено."
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.report_rental_object_document
+msgid "No cost centers found."
+msgstr "Центрів витрат не знайдено."
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_contract__number
+#: model_terms:ir.ui.view,arch_db:rent.report_rental_object_document
+msgid "Number"
+msgstr "Номер"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__message_has_error_counter
+msgid "Number of errors"
+msgstr ""
+
+#. module: rent
+#: model:ir.model.fields,help:rent.field_rent_rental_object__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr ""
+
+#. module: rent
+#: model:ir.model.fields,help:rent.field_rent_rental_object__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.rent_cost_center_form
+msgid "Open actual revenue"
+msgstr "Відкрити фактичні доходи"
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.rent_cost_center_form
+msgid "Open planned revenue"
+msgstr "Відкрити планові доходи"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object_group__parent_path
+msgid "Parent Path"
+msgstr "Батьківський шлях"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object_group__parent_id
+msgid "Parent rental object group"
+msgstr "Батьківська група об'єктів оренди"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_contract__res_partner_id
+msgid "Partner"
+msgstr "Партнер"
+
+#. module: rent
+#: model:ir.actions.act_window,name:rent.action_rent_planned_monthly_revenue_window
+#: model:ir.model,name:rent.model_rent_planned_monthly_revenue
+#: model:ir.model.fields,field_description:rent.field_rent_cost_center__planned_monthly_revenue_ids
+#: model:ir.ui.menu,name:rent.rent_menu_planned_monthly_revenue
+#: model_terms:ir.ui.view,arch_db:rent.rent_cost_center_form
+msgid "Planned monthly revenue"
+msgstr "Планований щомісячний дохід"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__access_url
+msgid "Portal Access URL"
+msgstr ""
+
+#. module: rent
+#: model:ir.module.category,name:rent.category_rent
+#: model:ir.ui.menu,name:rent.rent_main_menu
+msgid "Rent"
+msgstr "Оренда"
+
+#. module: rent
+#: model:res.groups,name:rent.group_rent_admin
+msgid "Rent Admin"
+msgstr "Адміністратор оренда"
+
+#. module: rent
+#: model:ir.actions.act_window,name:rent.action_rent_analysis_report_data
+#: model:ir.actions.act_window,name:rent.action_rent_analysis_wizard
+#: model:ir.ui.menu,name:rent.menu_rent_analysis_report
+#: model_terms:ir.ui.view,arch_db:rent.rent_analysis_report_line_pivot_view
+msgid "Rent Analysis"
+msgstr "Аналіз оренди"
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.rent_analysis_report_line_graph_view
+msgid "Rent Analysis Graph"
+msgstr "Графік аналізу орендної плати"
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.rent_analysis_wizard_form_view
+msgid "Rent Analysis Report"
+msgstr "Звіт про аналіз орендної плати"
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.rent_analysis_report_line_list_view
+msgid "Rent Analysis Report Data"
+msgstr "Дані звіту про аналіз орендної плати"
+
+#. module: rent
+#: model:ir.model,name:rent.model_rent_analysis_report_line
+msgid "Rent Analysis Report Line (Transient)"
+msgstr ""
+
+#. module: rent
+#: model:ir.model,name:rent.model_rent_analysis_wizard
+msgid "Rent Analysis Report Wizard"
+msgstr ""
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_res_partner__rent_contract_ids
+#: model:ir.model.fields,field_description:rent.field_res_users__rent_contract_ids
+msgid "Rent Contracts"
+msgstr "Договори оренди"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__rent_indexation
+msgid "Rent Indexation"
+msgstr "Індексація орендної плати"
+
+#. module: rent
+#: model:res.groups,name:rent.group_rent_user
+msgid "Rent User"
+msgstr "Користувач Оренда"
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.rent_contract_form
+msgid "Rental"
+msgstr "Оренда"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__rental_amount
+msgid "Rental Amount"
+msgstr "Оренда Сума"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_actual_cost__rental_object_id
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__rental_object_id
+#: model:ir.model.fields,field_description:rent.field_rent_cost_center__rental_object_id
+#: model_terms:ir.ui.view,arch_db:rent.rent_analysis_report_line_search_view
+#: model_terms:ir.ui.view,arch_db:rent.view_rent_actual_cost_search
+msgid "Rental Object"
+msgstr "Об'єкт Оренди"
+
+#. module: rent
+#: model:ir.actions.report,name:rent.action_report_rental_object
+msgid "Rental Object Details"
+msgstr "Деталі Об'єкта Оренди"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__rental_object_group_id
+msgid "Rental Object Group"
+msgstr "Група Об'єкта Оренди"
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.report_rental_object_document
+msgid "Rental Object:"
+msgstr "Об'єкт Оренди:"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_res_country__rent_rental_object_ids
+#: model_terms:ir.ui.view,arch_db:rent.view_country_form
+msgid "Rental Objects"
+msgstr "Об'єкти Оренди"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_contract__rental_rate
+#: model_terms:ir.ui.view,arch_db:rent.report_rental_object_document
+msgid "Rental Rate"
+msgstr "Орендна ставка"
+
+#. module: rent
+#: model:ir.model.fields,help:rent.field_rent_contract__rental_rate
+msgid "Rental Rate (Monthly)."
+msgstr "Орендна Ставка (Місячна)."
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_contract__rental_rate_currency_id
+msgid "Rental Rate Currency"
+msgstr "Оренда Валюта Ставки"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_contract__rental_rate_tax_id
+msgid "Rental Rate Tax"
+msgstr "Оренда Податкова Ставка"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__rental_currency_coef
+#: model_terms:ir.ui.view,arch_db:rent.rent_analysis_report_line_list_view
+msgid "Rental currency coefficient"
+msgstr "Оренда Валютний Коефіцієнт"
+
+#. module: rent
+#: model:ir.actions.act_window,name:rent.action_rent_rental_object_window
+#: model:ir.model,name:rent.model_rent_rental_object
+#: model:ir.model.fields,field_description:rent.field_rent_contract__rental_object_id
+#: model:ir.ui.menu,name:rent.rent_menu_rental_object
+#: model_terms:ir.ui.view,arch_db:rent.rent_contract_search
+msgid "Rental object"
+msgstr "Об'єкт оренди"
+
+#. module: rent
+#: model:ir.actions.act_window,name:rent.action_rent_rental_object_group_window
+#: model:ir.model,name:rent.model_rent_rental_object_group
+#: model:ir.ui.menu,name:rent.rent_menu_rental_object_group
+#: model_terms:ir.ui.view,arch_db:rent.rent_rental_object_group_search
+msgid "Rental object group"
+msgstr "Група Об'єкту оренди"
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.view_rent_rental_object_group_tree
+msgid "Rental object groups"
+msgstr "Групи об'єкту оренди"
+
+#. module: rent
+#: model:ir.ui.menu,name:rent.menu_rent_rental_objects
+msgid "Rental objects"
+msgstr "Об'єкти оренди"
+
+#. module: rent
+#: model:ir.ui.menu,name:rent.menu_rent_reports
+msgid "Reports"
+msgstr "Звіти"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__activity_user_id
+msgid "Responsible User"
+msgstr "Відповідальний користувач"
+
+#. module: rent
+#: model:rent.rental.object.group,name:rent.rent_rental_object_group_2
+msgid "Retroville"
+msgstr ""
+
+#. module: rent
+#: model:rent.rental.object,name:rent.rent_rental_object_1
+msgid "Retroville Mall (floor 1)"
+msgstr ""
+
+#. module: rent
+#: model:rent.rental.object,name:rent.rent_rental_object_2
+msgid "Retroville Mall (floor 2)"
+msgstr ""
+
+#. module: rent
+#: model:rent.rental.object.group,name:rent.rent_rental_object_group_3
+msgid "Retroville floor 1"
+msgstr ""
+
+#. module: rent
+#: model:rent.rental.object.group,name:rent.rent_rental_object_group_4
+msgid "Retroville floor 2"
+msgstr ""
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_abstract_monthly_revenue__revenue
+#: model:ir.model.fields,field_description:rent.field_rent_actual_monthly_revenue__revenue
+#: model:ir.model.fields,field_description:rent.field_rent_planned_monthly_revenue__revenue
+msgid "Revenue"
+msgstr "Дохід"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr ""
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.rent_analysis_report_line_search_view
+msgid "Search Rent Analysis"
+msgstr "Пошук Аналіз Оренди"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__access_token
+msgid "Security Token"
+msgstr ""
+
+#. module: rent
+#. odoo-python
+#: code:addons/rent/wizards/rent_analysis_wizard.py:0
+#, python-format
+msgid "Start Date cannot be after End Date."
+msgstr "Дата початку не може бути після дати завершення."
+
+#. module: rent
+#: model:ir.model.fields,help:rent.field_rent_rental_object__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: rent
+#. odoo-python
+#: code:addons/rent/models/rent_contract.py:0
+#, python-format
+msgid ""
+"Tax '%(tax)s' (ID: %(tax_id)s) has an unsupported amount type "
+"'%(amount_type)s'. Only 'percent' type taxes are allowed for this "
+"calculation."
+msgstr ""
+
+#. module: rent
+#: model:ir.model.fields,help:rent.field_rent_contract__res_partner_id
+msgid "The partner associated with this contract."
+msgstr "Партнер, пов'язаний з цим контрактом."
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.view_rent_actual_cost_search
+msgid "This Month"
+msgstr "Поточний Місяць"
+
+#. module: rent
+#: model_terms:ir.actions.act_window,help:rent.action_rent_analysis_report_data
+msgid ""
+"This report allows you to analyze rental data using interactive pivot tables"
+" and graphs."
+msgstr ""
+"Цей звіт дозволяє аналізувати дані про оренду за допомогою інтерактивних зведених таблиць"
+" і графіків."
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.rent_analysis_report_line_list_view
+msgid "Total Exploitation"
+msgstr "Всього Експлуатація"
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.rent_analysis_report_line_list_view
+msgid "Total Marketing"
+msgstr "Всього Маркетинг"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__rent_total
+msgid "Total Rent"
+msgstr "Всього Оренда"
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.rent_analysis_report_line_list_view
+msgid "Total Rental"
+msgstr "Всього Оренда"
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.rent_rental_object_form
+msgid "Total size"
+msgstr "Загальний розмір"
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.report_rental_object_document
+msgid "Type"
+msgstr "Тип"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_contract__contract_type
+msgid "Type of contract"
+msgstr "Тип договору"
+
+#. module: rent
+#: model:ir.model.fields,help:rent.field_rent_rental_object__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr ""
+
+#. module: rent
+#: model:ir.module.category,description:rent.category_rent
+msgid "Рівні доступу користувачів для оренди"
+msgstr ""
+
+#. module: rent
+#: model:res.groups,comment:rent.group_rent_user
+msgid "User of Rent"
+msgstr "Користувач Оренда"
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_rental_object__website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: rent
+#: model:ir.model.fields,help:rent.field_rent_rental_object__website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.rent_contract_form
+msgid "currency"
+msgstr "валюта"
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.report_rental_object_document
+msgid "m²"
+msgstr "м²"
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.rent_contract_form
+msgid "rate"
+msgstr "ставка"
+
+#. module: rent
+#: model_terms:ir.ui.view,arch_db:rent.rent_contract_form
+msgid "tax"
+msgstr "податок"

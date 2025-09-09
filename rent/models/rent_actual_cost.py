@@ -12,19 +12,19 @@ class RentActualCost(models.Model):
     )
     date = fields.Date(string='Date', required=True)
     rental_cost = fields.Monetary(
-        string='Actual Rental Cost',
+        string='Rental',
         currency_field='company_currency_id',
     )
     exploitation_cost = fields.Monetary(
-        string='Actual Exploitation Cost',
+        string='Exploitation',
         currency_field='company_currency_id',
     )
     marketing_cost = fields.Monetary(
-        string='Actual Marketing Cost',
+        string='Marketing',
         currency_field='company_currency_id',
     )
     total_cost = fields.Monetary(
-        string='Actual Total Cost',
+        string='Total',
         currency_field='company_currency_id',
         compute='_compute_total_cost',
         store=True,

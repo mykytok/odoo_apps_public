@@ -17,39 +17,26 @@
         <field name="model">rent.cost.center</field>
         <field name="arch" type="xml">
             <form>
-
                 <sheet>
                     <header>
                         <button string="Open planned revenue"
                                 name="open_planned_monthly_revenue_list"
                                 type="object"
-                                class="oe_highlight" data-hotkey="q"
-                                display="always"/>
+                                class="oe_highlight"
+                                display="always"
+                                icon="fa-list"/>
                         <button string="Open actual revenue"
                                 name="open_actual_monthly_revenue_list"
                                 type="object"
-                                class="oe_highlight" data-hotkey="q"
-                                display="always"/>
+                                class="oe_highlight"
+                                display="always"
+                                icon="fa-list"/>
                     </header>
-                    <group>
-                        <group>
-                            <field name="name"/>
-                            <field name="rental_object_id"/>
-                            <field name="area_size"/>
-                            <field name="planned_monthly_revenue_ids">
-                                <tree string="Planned monthly revenue" limit="7" default_order="date desc" editable="top">
-                                    <field name="date"/>
-                                    <field name="revenue"/>
-                                </tree>
-                            </field>
+                    <group col="1">
+                        <field name="name"/>
+                        <field name="rental_object_id"/>
+                        <field name="area_size"/>
 
-                            <field name="actual_monthly_revenue_ids">
-                                <tree string="Planned monthly revenue" limit="7" default_order="date desc" editable="top">
-                                    <field name="date"/>
-                                    <field name="revenue"/>
-                                </tree>
-                            </field>
-                        </group>
                     </group>
                 </sheet>
             </form>

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-07 15:37+0000\n"
-"PO-Revision-Date: 2025-09-07 15:37+0000\n"
+"POT-Creation-Date: 2025-09-09 07:44+0000\n"
+"PO-Revision-Date: 2025-09-09 07:44+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -91,10 +91,9 @@ msgid "Actual Exploitation"
 msgstr "Експлуатаційні (факт)"
 
 #. module: rent
-#: model:ir.model.fields,field_description:rent.field_rent_actual_cost__exploitation_cost
 #: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__actual_exploitation_cost
-msgid "Actual Exploitation Cost"
-msgstr "Фактичні експлуатаційні витрати"
+msgid "Exploitation Cost (Actual)"
+msgstr "Експлуатаційні витрати (Факт)"
 
 #. module: rent
 #: model_terms:ir.ui.view,arch_db:rent.rent_analysis_report_line_list_view
@@ -102,10 +101,9 @@ msgid "Actual Marketing"
 msgstr "Маркетинг (факт)"
 
 #. module: rent
-#: model:ir.model.fields,field_description:rent.field_rent_actual_cost__marketing_cost
 #: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__actual_marketing_cost
-msgid "Actual Marketing Cost"
-msgstr "Фактичні маркетингові витрати"
+msgid "Marketing Cost (Actual)"
+msgstr "Маркетингові витрати (Факт)"
 
 #. module: rent
 #: model_terms:ir.ui.view,arch_db:rent.view_rent_actual_cost_form
@@ -125,10 +123,9 @@ msgid "Actual Rental"
 msgstr "Аренда (факт)"
 
 #. module: rent
-#: model:ir.model.fields,field_description:rent.field_rent_actual_cost__rental_cost
 #: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__actual_rental_cost
-msgid "Actual Rental Cost"
-msgstr "Фактичні орендні витрати"
+msgid "Rental Cost (Actual)"
+msgstr "Орендні витрати (Факт)"
 
 #. module: rent
 #: model_terms:ir.ui.view,arch_db:rent.rent_analysis_report_line_list_view
@@ -136,7 +133,6 @@ msgid "Actual Total"
 msgstr "Всього (факт)"
 
 #. module: rent
-#: model:ir.model.fields,field_description:rent.field_rent_actual_cost__total_cost
 #: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__actual_total_cost
 msgid "Actual Total Cost"
 msgstr "Всього витрат (факт)"
@@ -157,7 +153,7 @@ msgstr "Фактичні витрати цього об'єкта оренди в
 #: model:ir.model.fields,field_description:rent.field_rent_cost_center__actual_monthly_revenue_ids
 #: model:ir.ui.menu,name:rent.rent_menu_actual_monthly_revenue
 msgid "Actual monthly revenue"
-msgstr "Щомісячний дохід (факт)"
+msgstr "Фактичний щомісячний дохід"
 
 #. module: rent
 #: model:ir.model.fields.selection,name:rent.selection__rent_contract__contract_type__additional_agreement
@@ -322,8 +318,7 @@ msgid ""
 "Currency change coefficient from the start of the contract to the current "
 "month."
 msgstr ""
-"Коефіцієнт зміни курсу валюти з початку дії контракту до поточного "
-"місяця."
+"Коефіцієнт зміни курсу валюти з початку дії контракту до поточного місяця."
 
 #. module: rent
 #: model:ir.model.fields,help:rent.field_rent_rental_object__access_url
@@ -411,6 +406,7 @@ msgid "Expiration Date"
 msgstr "Термін дії"
 
 #. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_actual_cost__exploitation_cost
 #: model_terms:ir.ui.view,arch_db:rent.rent_contract_form
 msgid "Exploitation"
 msgstr "Експлуатація"
@@ -581,6 +577,7 @@ msgid "Main additional agreement"
 msgstr "Головна додаткова угода"
 
 #. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_actual_cost__marketing_cost
 #: model_terms:ir.ui.view,arch_db:rent.rent_contract_form
 msgid "Marketing"
 msgstr "Маркетинг"
@@ -735,7 +732,6 @@ msgstr "Партнер"
 #: model:ir.model,name:rent.model_rent_planned_monthly_revenue
 #: model:ir.model.fields,field_description:rent.field_rent_cost_center__planned_monthly_revenue_ids
 #: model:ir.ui.menu,name:rent.rent_menu_planned_monthly_revenue
-#: model_terms:ir.ui.view,arch_db:rent.rent_cost_center_form
 msgid "Planned monthly revenue"
 msgstr "Планований щомісячний дохід"
 
@@ -805,6 +801,7 @@ msgid "Rent User"
 msgstr "Користувач Оренда"
 
 #. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_actual_cost__rental_cost
 #: model_terms:ir.ui.view,arch_db:rent.rent_contract_form
 msgid "Rental"
 msgstr "Оренда"
@@ -997,8 +994,13 @@ msgid ""
 "This report allows you to analyze rental data using interactive pivot tables"
 " and graphs."
 msgstr ""
-"Цей звіт дозволяє аналізувати дані про оренду за допомогою інтерактивних зведених таблиць"
-" і графіків."
+"Цей звіт дозволяє аналізувати дані про оренду за допомогою інтерактивних "
+"зведених таблиць і графіків."
+
+#. module: rent
+#: model:ir.model.fields,field_description:rent.field_rent_actual_cost__total_cost
+msgid "Total"
+msgstr "Всього витрат (факт)"
 
 #. module: rent
 #: model_terms:ir.ui.view,arch_db:rent.rent_analysis_report_line_list_view
@@ -1042,7 +1044,7 @@ msgstr ""
 
 #. module: rent
 #: model:ir.module.category,description:rent.category_rent
-msgid "Рівні доступу користувачів для оренди"
+msgid "User access levels for Rent"
 msgstr ""
 
 #. module: rent

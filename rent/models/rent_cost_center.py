@@ -37,8 +37,9 @@ class CostCenter(models.Model):
             'res_model': 'rent.planned.monthly.revenue',
             'view_mode': 'list',
             'res_id': False,
-            'target': 'self',
+            'target': 'new',
             'domain': [('cost_center_id', '=', self.id)],
+            'context': {'default_cost_center_id': self.id}
         }
     def open_actual_monthly_revenue_list(self):
         self.ensure_one()
@@ -49,6 +50,7 @@ class CostCenter(models.Model):
             'res_model': 'rent.actual.monthly.revenue',
             'view_mode': 'list',
             'res_id': False,
-            'target': 'self',
+            'target': 'new',
             'domain': [('cost_center_id', '=', self.id)],
+            'context': {'default_cost_center_id': self.id}
         }

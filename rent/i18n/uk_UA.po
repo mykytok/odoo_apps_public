@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-09 07:44+0000\n"
-"PO-Revision-Date: 2025-09-09 07:44+0000\n"
+"POT-Creation-Date: 2025-09-11 07:37+0000\n"
+"PO-Revision-Date: 2025-09-11 07:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -92,7 +92,7 @@ msgstr "Експлуатаційні (факт)"
 
 #. module: rent
 #: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__actual_exploitation_cost
-msgid "Exploitation Cost (Actual)"
+msgid "Actual Exploitation Cost"
 msgstr "Експлуатаційні витрати (Факт)"
 
 #. module: rent
@@ -102,7 +102,7 @@ msgstr "Маркетинг (факт)"
 
 #. module: rent
 #: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__actual_marketing_cost
-msgid "Marketing Cost (Actual)"
+msgid "Actual Marketing Cost"
 msgstr "Маркетингові витрати (Факт)"
 
 #. module: rent
@@ -124,7 +124,7 @@ msgstr "Аренда (факт)"
 
 #. module: rent
 #: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__actual_rental_cost
-msgid "Rental Cost (Actual)"
+msgid "Actual Rental Cost"
 msgstr "Орендні витрати (Факт)"
 
 #. module: rent
@@ -804,7 +804,7 @@ msgstr "Користувач Оренда"
 #: model:ir.model.fields,field_description:rent.field_rent_actual_cost__rental_cost
 #: model_terms:ir.ui.view,arch_db:rent.rent_contract_form
 msgid "Rental"
-msgstr "Оренда"
+msgstr "Орендна"
 
 #. module: rent
 #: model:ir.model.fields,field_description:rent.field_rent_analysis_report_line__rental_amount
@@ -1061,6 +1061,13 @@ msgstr ""
 #: model:ir.model.fields,help:rent.field_rent_rental_object__website_message_ids
 msgid "Website communication history"
 msgstr ""
+
+#. module: rent
+#. odoo-python
+#: code:addons/rent/models/rent_rental_object_group.py:0
+#, python-format
+msgid "You cannot set a rental object group as its own parent."
+msgstr "Ви не можете встановити групу об'єктів оренди як її власний батьківський елемент."
 
 #. module: rent
 #: model_terms:ir.ui.view,arch_db:rent.rent_contract_form

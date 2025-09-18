@@ -9,7 +9,8 @@
     'depends': [
         'base',
         'account',
-        'portal'
+        'portal',
+        'mail'
     ],
 
     'external_dependencies': {

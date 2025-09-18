@@ -11,6 +11,7 @@ class Contract(models.Model):
                     """
 
     _name = 'rent.contract'
+    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin', ]
     _description = 'Contract'
 
     name = fields.Char(

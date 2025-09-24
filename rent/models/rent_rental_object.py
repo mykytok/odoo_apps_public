@@ -21,12 +21,6 @@ class RentalObject(models.Model):
         help="Area of the rental property in square meters."
     )
 
-    rent_indexation = fields.Float(
-        help="Annual indexation (increase) of rent."
-    )
-
-    initial_rent_indexation_date = fields.Date()
-
     contract_ids = fields.One2many(
         comodel_name='rent.contract',
         inverse_name='rental_object_id',

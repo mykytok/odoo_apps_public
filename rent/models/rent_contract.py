@@ -69,6 +69,11 @@ class Contract(models.Model):
         default=lambda self: self.env.company.currency_id.id)
     marketing_rate_tax_id = fields.Many2one(comodel_name='account.tax')
 
+    rent_indexation = fields.Float(
+        help="Annual indexation (increase) of rent."
+    )
+    initial_rent_indexation_date = fields.Date()
+
     res_partner_id = fields.Many2one(
         comodel_name='res.partner',
         string='Partner',
@@ -249,13 +254,13 @@ class Contract(models.Model):
         return 1
 
     @api.model
-    def _get_rent_indexation_coefficient(self, rental_object, calc_date):
+    def _get_rent_indexation_coefficient(self, contract, calc_date):
         """
         Calculates the rent indexation coefficient, applying the first indexation
         immediately on initial_rent_indexation_date and compounding annually thereafter.
         
         Args:
-            rental_object (odoo.models): The rental object record.
+            contract (odoo.models): The contract record.
             calc_date (datetime.date): The date of the current rent calculation segment.
 
         Returns:
@@ -266,11 +271,11 @@ class Contract(models.Model):
         repot_date = date(calc_date.year, calc_date.month, last_day_of_month)
 
 
-        if not rental_object.initial_rent_indexation_date or not rental_object.rent_indexation:
+        if not contract.initial_rent_indexation_date or not contract.rent_indexation:
             return 1.0
 
-        initial_date = rental_object.initial_rent_indexation_date
-        indexation_rate = rental_object.rent_indexation / 100.0
+        initial_date = contract.initial_rent_indexation_date
+        indexation_rate = contract.rent_indexation / 100.0
         
         # If the date is before the initial indexation date, no indexation
         if repot_date < initial_date:
@@ -310,7 +315,7 @@ class Contract(models.Model):
 
         # Get the rent indexation coefficient for the current segment date
         indexation_coefficient = self._get_rent_indexation_coefficient(
-            rental_object,
+            contract,
             repot_date
         )
         segment_data['indexation_coefficient'] = indexation_coefficient

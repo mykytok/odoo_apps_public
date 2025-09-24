@@ -25,8 +25,6 @@
                         <group>
                             <field name="actual_contract_number_date"/>
                             <field name="area_size"/>
-                            <field name="initial_rent_indexation_date"/>
-                            <field name="rent_indexation"/>
                             <field name="res_country_id"/>
                         </group>
                     </group>

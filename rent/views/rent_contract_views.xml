@@ -39,6 +39,8 @@
                                 <field name="number"/>
                                 <field name="date"/>
                                 <field name="expiration_date"/>
+                                <field name="rent_indexation"/>
+                                <field name="initial_rent_indexation_date"/>
                             </group>
                         </group>
                         <group col='3'>

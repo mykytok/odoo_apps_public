@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_currency_rent_form" model="ir.ui.view">
+        <field name="name">res.currency.rent.form</field>
+        <field name="model">res.currency</field>
+        <field name="inherit_id" ref="base.view_currency_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='full_name']" position="after">
+                <field name="rent_plan_currency_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

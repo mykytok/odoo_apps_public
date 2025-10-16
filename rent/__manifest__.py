@@ -32,7 +32,11 @@
         'views/rent_cost_center_views.xml',
         'views/res_partner_views.xml',
         'views/res_country_views.xml',
+        'views/res_plan_currency_views.xml',
         'views/rent_actual_cost.xml',
+        'views/rent_guarantee_payment.xml',
+        'views/rent_insurance_contract_views.xml',
+
 
         'reports/rental_object_report.xml',
 

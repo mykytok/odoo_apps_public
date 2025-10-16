@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rent_guarantee_payment_list" model="ir.ui.view">
+        <field name="name">rent.guarantee.payment.list</field>
+        <field name="model">rent.guarantee.payment</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="rental_object_id"/>
+                <field name="guarantee_type"/>
+                <field name="sum" widget='monetary'
+                       options="{'currency_field': 'currency_id'}"/>
+                <field name="number"/>
+                <field name="date"/>
+                <field name="expiration_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="rent_guarantee_payment_form" model="ir.ui.view">
+        <field name="name">rent.guarantee.payment.form ()</field>
+        <field name="model">rent.guarantee.payment</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group col="1">
+                        <group col="2">
+                            <group>
+                                <field name="rental_object_id"/>
+                                <field name="guarantee_type"/>
+                                <field name="sum"
+                                               class="o_input_13ch"
+                                               widget='monetary'
+                                               options="{'currency_field': 'currency_id'}"/>
+                                <field name="currency_id"/>
+                            </group>
+                            <group>
+                                <field name="number"/>
+                                <field name="date"/>
+                                <field name="expiration_date"/>
+                                <field name="vat"/>
+                                <field name="discounted"/>
+                            </group>
+                        </group>
+                        <field name="comment" placeholder="Internal notes..."/>
+                    </group>
+                </sheet>
+<!--                <chatter/>-->
+                <div class="oe_chatter">
+                   <field name="message_follower_ids" groups="base.group_user"/>
+                   <field name="message_ids" widget="mail_thread"/>
+               </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="rent_guarantee_payment_search" model="ir.ui.view">
+        <field name="name">rent.guarantee.payment.search (rent_guarantee_payment)</field>
+        <field name="model">rent.guarantee.payment</field>
+        <field name="arch" type="xml">
+            <search string="Filters">
+                <searchpanel>
+                    <field name="rental_object_id" string="Rental object" hierarchize="0" select="one" order="name"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rent_guarantee_payment_window" model="ir.actions.act_window">
+        <field name="name">Guarantee payment</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">rent.guarantee.payment</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="rent_menu_guarantee_payment"
+              action="action_rent_guarantee_payment_window"
+              parent="rent_menu_configuration"
+              name="Guarantee payment" sequence="200"/>
+
+</odoo>

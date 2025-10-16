@@ -18,6 +18,8 @@ class Contract(models.Model):
         compute='_compute_name',
     )
     active = fields.Boolean(default=True)
+    comment = fields.Html(string='Notes')
+
     rental_object_id = fields.Many2one(
         comodel_name='rent.rental.object',
         string='Rental object'

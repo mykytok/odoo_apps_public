@@ -6,6 +6,11 @@ from . import rent_abstract_monthly_revenue
 from . import rent_actual_monthly_revenue
 from . import rent_planned_monthly_revenue
 from . import rent_analysis_report_line
-from . import res_partner
-from . import res_country
 from . import rent_actual_cost
+from . import rent_guarantee_payment
+from . import rent_insurance_contract
+
+from . import res_country
+from . import res_partner
+from . import res_currency
+

@@ -14,6 +14,8 @@ class RentalObject(models.Model):
 
     name = fields.Char(translate=True)
     active = fields.Boolean(default=True)
+    comment = fields.Html(string='Notes')
+
     rental_object_group_id = fields.Many2one(
         comodel_name='rent.rental.object.group'
     )
@@ -37,6 +39,18 @@ class RentalObject(models.Model):
         compute_sudo=True,
         store=True,
         string="Actual contract",
+    )
+
+    guarantee_payment_ids = fields.One2many(
+        comodel_name='rent.guarantee.payment',
+        inverse_name='rental_object_id',
+        string="Guarantee payments",
+    )
+
+    insurance_contract_ids = fields.One2many(
+        comodel_name='rent.insurance.contract',
+        inverse_name='rental_object_id',
+        string="Insurance Contracts",
     )
 
     res_country_id = fields.Many2one(

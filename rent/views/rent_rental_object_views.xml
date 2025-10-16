@@ -32,6 +32,7 @@
                         <page string="Contracts" name="contracts">
                             <field name="contract_ids">
                                 <tree default_order="date desc, number desc">
+                                    <button type="object" name="get_formview_action" string="Open" icon="fa-edit"/>
                                     <field name="date"/>
                                     <field name="name"/>
                                     <field name="contract_type"/>
@@ -52,6 +53,33 @@
                                     <field name="area_size" sum="Total size"/>
                                 </tree>
                             </field>
+                        </page>
+                        <page string="Guarantee payments">
+                            <field name="guarantee_payment_ids">
+                                <tree default_order="name">
+                                    <button type="object" name="get_formview_action" string="Open" icon="fa-edit"/>
+                                    <field name="guarantee_type"/>
+                                    <field name="sum" widget='monetary'
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="number"/>
+                                    <field name="date"/>
+                                    <field name="expiration_date"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Insurance Contracts" name="insurance_contracts">
+                            <field name="insurance_contract_ids">
+                                <tree default_order="start_date desc">
+                                    <button type="object" name="get_formview_action" string="Open" icon="fa-edit"/>
+                                    <field name="number"/>
+                                    <field name="date"/>
+                                    <field name="start_date"/>
+                                    <field name="end_date"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page name='internal_notes' string="Internal Notes">
+                            <field name="comment" placeholder="Internal notes..."/>
                         </page>
                     </notebook>
                 </sheet>

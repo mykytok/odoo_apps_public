@@ -193,11 +193,19 @@ class Contract(models.Model):
             if effective_contract:
                 self._apply_contract_rates(segment_data, effective_contract,
                                            days_in_segment, current_month_day_count)
-                self._apply_contract_rates(segment_data, effective_contract,
-                                           days_in_segment, current_month_day_count)
+
+                # 1. Convert to Company Currency (Current amounts)
                 self._convert_to_company_currency(segment_data, effective_contract,
                                                   company_currency, end_of_current_month)
+
+                # 2. Convert to Plan amounts (NEW dedicated step)
+                self._convert_to_plan_currency(segment_data, effective_contract,
+                                               company_currency, end_of_current_month)
+
+                # 3. Apply currency coefficients (Applies to both Current and Plan amounts)
                 self._apply_currency_coef(segment_data, effective_contract, end_of_current_month)
+
+                # 4. Set contract details
                 self._set_contract_details(segment_data, effective_contract)
 
             monthly_segments_data.append(segment_data)
@@ -378,17 +386,71 @@ class Contract(models.Model):
         )
 
     @api.model
+    def _calculate_plan_amount(self, original_amount, rate_currency, conversion_date, company_currency):
+        """
+        Calculates the Plan amount. It takes the Original Amount and converts it from
+        the Plan Currency (rent_plan_currency_id) to the Company Currency.
+        If Plan Currency is not defined, returns 0.0.
+        """
+        if not rate_currency:
+            return 0.0
+
+        plan_currency = rate_currency.rent_plan_currency_id
+
+        if not plan_currency:
+            # If the Plan Currency is NOT defined for the Rate Currency, the result is 0.0.
+            return 0.0
+
+        # The original amount (already calculated in Rate Currency) is treated as
+        # an amount in Plan Currency and then converted to Company Currency.
+        final_amount_in_company_currency = plan_currency.with_context(date=conversion_date)._convert(
+            original_amount, company_currency, self.env.company, round=True
+        )
+
+        return final_amount_in_company_currency
+
+    @api.model
+    def _convert_to_plan_currency(self, segment_data, contract, company_currency, conversion_date):
+        """
+        Converts original amounts to the final Plan amounts in Company Currency
+        using the defined Plan Currency as the source currency for conversion.
+        """
+        original_rental_amount = segment_data['original_rental']['amount']
+        original_exploitation_amount = segment_data['original_exploitation']['amount']
+        original_marketing_amount = segment_data['original_marketing']['amount']
+
+        # Use _calculate_plan_amount to get the amount in Company Currency
+        segment_data['plan_rental_amount'] = self._calculate_plan_amount(
+            original_rental_amount, contract.rental_rate_currency_id,
+            conversion_date, company_currency
+        )
+        segment_data['plan_exploitation_amount'] = self._calculate_plan_amount(
+            original_exploitation_amount, contract.exploitation_rate_currency_id,
+            conversion_date, company_currency
+        )
+        segment_data['plan_marketing_amount'] = self._calculate_plan_amount(
+            original_marketing_amount, contract.marketing_rate_currency_id,
+            conversion_date, company_currency
+        )
+
+        segment_data['plan_rent_total'] = (
+                segment_data['plan_rental_amount'] +
+                segment_data['plan_exploitation_amount'] +
+                segment_data['plan_marketing_amount']
+        )
+
+    @api.model
     def _apply_currency_coef(self, segment_data, contract, conversion_date):
         """
-        Fills in the currency change coefficient
-        from the start of the contract to the current month.
+        Fills in the currency change coefficient and applies it to both
+        Company Currency amounts (current) and Plan amounts.
         """
         # Pass the ID of the currency recordset, not the recordset itself
         rental_currency_id = contract.rental_rate_currency_id.id if contract.rental_rate_currency_id else False
         exploitation_currency_id = contract.exploitation_rate_currency_id.id if contract.exploitation_rate_currency_id else False
         marketing_currency_id = contract.marketing_rate_currency_id.id if contract.marketing_rate_currency_id else False
 
-        # Check if currency_id is valid before calling the method
+        # --- COEFFICIENT CALCULATION ---
         if rental_currency_id:
             segment_data['rental_currency_coef'] = self._get_currency_coefficient_for_dates(
                 rental_currency_id, contract.date, conversion_date
@@ -410,13 +472,34 @@ class Contract(models.Model):
         else:
             segment_data['marketing_currency_coef'] = 1.0
 
-        # The rest of your code for calculations...
+        # --- APPLY TO CURRENT AMOUNTS (Company Currency Amounts) ---
         segment_data['rental_amount'] = (
                 segment_data['rental_amount'] * segment_data['rental_currency_coef'])
         segment_data['exploitation_amount'] = (
                 segment_data['exploitation_amount'] * segment_data['exploitation_currency_coef'])
         segment_data['marketing_amount'] = (
                 segment_data['marketing_amount'] * segment_data['marketing_currency_coef'])
+
+        segment_data['rent_total'] = (
+                segment_data['rental_amount'] +
+                segment_data['exploitation_amount'] +
+                segment_data['marketing_amount']
+        )
+
+        # --- APPLY TO PLAN AMOUNTS (Plan Amounts) ---
+        segment_data['plan_rental_amount'] = (
+                segment_data['plan_rental_amount'] * segment_data['rental_currency_coef'])
+        segment_data['plan_exploitation_amount'] = (
+                segment_data['plan_exploitation_amount'] * segment_data['exploitation_currency_coef'])
+        segment_data['plan_marketing_amount'] = (
+                segment_data['plan_marketing_amount'] * segment_data['marketing_currency_coef'])
+
+        # Recalculate total plan rent
+        segment_data['plan_rent_total'] = (
+                segment_data['plan_rental_amount'] +
+                segment_data['plan_exploitation_amount'] +
+                segment_data['plan_marketing_amount']
+        )
 
     @api.model
     def _set_contract_details(self, segment_data, contract):

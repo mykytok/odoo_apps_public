@@ -79,35 +79,66 @@ class RentAnalysisReportLine(models.TransientModel):
         currency_field='company_currency_id',
         readonly=True
     )
-    
+
     delta_rental = fields.Monetary(
         string='Delta Rental',
         currency_field='company_currency_id',
-        # compute='_compute_delta_costs',
+        compute='_compute_delta_costs',
+        store=True,  # Store the value for better pivot/graph performance
     )
     delta_exploitation = fields.Monetary(
         string='Delta Exploitation',
         currency_field='company_currency_id',
-        # compute='_compute_delta_costs',
+        compute='_compute_delta_costs',
+        store=True,
     )
     delta_marketing = fields.Monetary(
         string='Delta Marketing',
         currency_field='company_currency_id',
-        # compute='_compute_delta_costs',
+        compute='_compute_delta_costs',
+        store=True,
     )
     delta_total = fields.Monetary(
         string='Delta Total',
         currency_field='company_currency_id',
-        # compute='_compute_delta_costs',
+        compute='_compute_delta_costs',
+        store=True,
     )
+
+    # Plan Amount Fields
+    plan_rental_amount = fields.Monetary(
+        string='Plan Rental Amount',
+        currency_field='company_currency_id',
+        readonly=True)
+    plan_exploitation_amount = fields.Monetary(
+        string='Plan Exploitation Amount',
+        currency_field='company_currency_id',
+        readonly=True)
+    plan_marketing_amount = fields.Monetary(
+        string='Plan Marketing Amount',
+        currency_field='company_currency_id',
+        readonly=True)
+    plan_rent_total = fields.Monetary(
+        string='Plan Total Rent',
+        currency_field='company_currency_id',
+        readonly=True)
+
 
     @api.depends('rental_amount', 'actual_rental_cost',
                  'exploitation_amount', 'actual_exploitation_cost',
                  'marketing_amount', 'actual_marketing_cost',
                  'rent_total', 'actual_total_cost')
     def _compute_delta_costs(self):
+        """Computes the delta between the planned amount and the actual cost."""
+        # Field pairs: (planned_amount, actual_cost, delta)
+        fields_map = [
+            ('rental_amount', 'actual_rental_cost', 'delta_rental'),
+            ('exploitation_amount', 'actual_exploitation_cost', 'delta_exploitation'),
+            ('marketing_amount', 'actual_marketing_cost', 'delta_marketing'),
+            ('rent_total', 'actual_total_cost', 'delta_total'),
+        ]
+
         for rec in self:
-            rec.delta_rental = rec.rental_amount - rec.actual_rental_cost
-            rec.delta_exploitation = rec.exploitation_amount - rec.actual_exploitation_cost
-            rec.delta_marketing = rec.marketing_amount - rec.actual_marketing_cost
-            rec.delta_total = rec.rent_total - rec.actual_total_cost
+            for amount_field, cost_field, delta_field in fields_map:
+                # Delta = Planned Amount - Actual Cost
+                rec[delta_field] = rec[amount_field] - rec[cost_field]

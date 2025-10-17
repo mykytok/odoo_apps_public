@@ -27,44 +27,30 @@ class RentAnalysisWizard(models.TransientModel):
 
     def action_generate_rent_analysis_report(self):
         """
-        Generates rent analysis data and opens a view with the distributed data.
+        Generates rent analysis data by calling the calculation method
+        and performs bulk creation of the transient report lines.
         """
         self.ensure_one()
 
+        # 1. Get structured data ready for bulk creation
         report_results = self.env['rent.rental.object']._get_rent_calculation_for_range(
             self.date_from, self.date_to
         )
 
-        report_line_ids = []
+        # 2. Add fixed fields (like currency) before bulk creation
+        company_currency_id = self.env.company.currency_id.id
 
+        # Add company_currency_id to each dictionary
         for obj_data in report_results:
-            report_line_ids.append(self.env['rent.analysis.report.line'].create({
-                'rental_object_id': obj_data['rental_object_id'],
-                'cost_center_id': obj_data.get('cost_center_id'), # Додано cost_center_id
-                'contract_id': obj_data['contract_id'],          
-                'date_from': obj_data['date_from'],
-                'date_to': obj_data['date_to'],
-                'rental_amount': obj_data['rental_amount'],
-                'exploitation_amount': obj_data['exploitation_amount'],
-                'marketing_amount': obj_data['marketing_amount'],
-                'rent_total': obj_data['rent_total'],
-                'rental_currency_coef': obj_data['rental_currency_coef'],
-                'exploitation_currency_coef': obj_data['exploitation_currency_coef'],
-                'marketing_currency_coef': obj_data['marketing_currency_coef'],
-                'company_currency_id': self.env.company.currency_id.id,
-                'area_size': obj_data['area_size'],
-                'indexation_coefficient': obj_data['indexation_coefficient'],
-                'actual_rental_cost': obj_data['actual_rental_cost'],
-                'actual_exploitation_cost': obj_data['actual_exploitation_cost'],
-                'actual_marketing_cost': obj_data['actual_marketing_cost'],
-                'actual_total_cost': obj_data['actual_total_cost'],
+            obj_data['company_currency_id'] = company_currency_id
 
-                'delta_rental': obj_data['actual_rental_cost'] - obj_data['rental_amount'],
-                'delta_exploitation': obj_data['actual_exploitation_cost'] - obj_data['exploitation_amount'],
-                'delta_marketing': obj_data['actual_marketing_cost'] - obj_data['marketing_amount'],
-                'delta_total': obj_data['actual_total_cost'] - obj_data['rent_total'],
-            }).id)
+        # 3. Bulk creation of transient report lines
+        # This is more efficient than individual .create() calls.
+        report_lines = self.env['rent.analysis.report.line'].create(report_results)
 
+        report_line_ids = report_lines.ids
+
+        # 4. Return the Action to display the report
         return {
             'name': 'Rent Analysis',
             'type': 'ir.actions.act_window',
@@ -72,9 +58,4 @@ class RentAnalysisWizard(models.TransientModel):
             'view_mode': 'pivot,graph,list',
             'domain': [('id', 'in', report_line_ids)],
             'target': 'current',
-            # 'context': {
-            #     'search_default_rental_object_id': 1,
-            #     'group_by': ['rental_object_id', 'cost_center_id', 'contract_id'], 
-            #     'measures': ['rent_total'],
-            # }
         }

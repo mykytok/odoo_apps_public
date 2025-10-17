@@ -72,12 +72,46 @@ class RentalObject(models.Model):
                 record.actual_contract_number_date = None
 
     @api.model
+    def _aggregate_actual_costs(self, rental_object_id, date_from, date_to):
+        """Aggregates actual costs by (year, month) key."""
+        actual_costs_map = {}
+
+        # Use self.env, as this is an @api.model method
+        actual_costs = self.env['rent.actual.cost'].search([
+            ('rental_object_id', '=', rental_object_id),
+            ('date', '>=', date_from),
+            ('date', '<=', date_to)
+        ])
+
+        for cost in actual_costs:
+            month_key = (cost.date.year, cost.date.month)
+
+            if month_key not in actual_costs_map:
+                actual_costs_map[month_key] = {
+                    'rental_cost': 0.0,
+                    'exploitation_cost': 0.0,
+                    'marketing_cost': 0.0,
+                    'total_cost': 0.0,
+                }
+
+            actual_costs_map[month_key]['rental_cost'] += cost.rental_cost
+            actual_costs_map[month_key]['exploitation_cost'] += cost.exploitation_cost
+            actual_costs_map[month_key]['marketing_cost'] += cost.marketing_cost
+            actual_costs_map[month_key]['total_cost'] += cost.total_cost
+
+        return actual_costs_map
+
+    @api.model
     def _get_rent_calculation_for_range(self, date_from, date_to):
         """
-        Calculates and distributes rent data for each rental object
+        Calculates and prepares distributed rent data for each rental object
         to its cost centers for a given date range.
+
+        Returns:
+            list[dict]: A list of dictionaries where each dict contains the values
+                        ready to be passed to rent.analysis.report.line.create().
         """
-        distributed_report_data = []
+        report_data_for_creation = []
         rental_objects = self.env['rent.rental.object'].search([])
         company_currency = self.env.company.currency_id
 
@@ -93,26 +127,11 @@ class RentalObject(models.Model):
                 date_from, date_to, active_contracts
             )
 
-            actual_costs_map = {}
-            for cost in self.env['rent.actual.cost'].search([
-                ('rental_object_id', '=', obj.id),
-                ('date', '>=', date_from),
-                ('date', '<=', date_to)
-            ]):
-                month_key = (cost.date.year, cost.date.month)
-                
-                if month_key not in actual_costs_map:
-                    actual_costs_map[month_key] = {
-                        'rental_cost': 0.0,
-                        'exploitation_cost': 0.0,
-                        'marketing_cost': 0.0,
-                        'total_cost': 0.0,
-                    }
-                
-                actual_costs_map[month_key]['rental_cost'] += cost.rental_cost
-                actual_costs_map[month_key]['exploitation_cost'] += cost.exploitation_cost
-                actual_costs_map[month_key]['marketing_cost'] += cost.marketing_cost
-                actual_costs_map[month_key]['total_cost'] += cost.total_cost
+            # Aggregate actual costs using the helper function
+            actual_costs_map = self._aggregate_actual_costs(obj.id, date_from, date_to)
+
+            cost_centers = obj.cost_center_ids.filtered(lambda cc: cc.area_size > 0)
+            total_area = sum(cost_centers.mapped('area_size'))
 
             for interval_start, interval_end in self.env['rent.contract']._generate_intervals(
                     significant_dates, date_from, date_to
@@ -125,61 +144,72 @@ class RentalObject(models.Model):
                 monthly_segments = self.env['rent.contract']._calculate_monthly_segments(
                     obj, effective_contract, interval_start, interval_end, company_currency
                 )
-                
-                # Distribute the calculated rent to cost centers
-                cost_centers = obj.cost_center_ids.filtered(lambda cc: cc.area_size > 0)
-                total_area = sum(cost_centers.mapped('area_size'))
-                
-                for segment in monthly_segments:
 
+                # ВИПРАВЛЕНО: Додано всі 4 планові поля
+                amount_fields = [
+                    'rental_amount', 'exploitation_amount', 'marketing_amount', 'rent_total',
+                    'plan_rental_amount', 'plan_exploitation_amount', 'plan_marketing_amount', 'plan_rent_total',
+                    # <--- ДОДАНО
+                    'actual_rental_cost', 'actual_exploitation_cost', 'actual_marketing_cost', 'actual_total_cost'
+                ]
+
+                for segment in monthly_segments:
                     segment_month = (date.fromisoformat(segment['date_from']).year,
                                      date.fromisoformat(segment['date_from']).month)
-                    
+
                     actual_cost_data = actual_costs_map.get(segment_month)
+
+                    # Apply actual costs proportionally to days in the period (логіка ОК)
+                    cost_types = ['rental', 'exploitation', 'marketing', 'total']
                     if actual_cost_data:
-                        segment['actual_rental_cost'] = (actual_cost_data['rental_cost'] 
-                                                         * segment['days_in_period'] 
-                                                         / segment['current_month_day_count'])
-                        segment['actual_exploitation_cost'] = (actual_cost_data['exploitation_cost']
-                                                               * segment['days_in_period'] 
-                                                               / segment['current_month_day_count'])
-                        segment['actual_marketing_cost'] = (actual_cost_data['marketing_cost']
-                                                            * segment['days_in_period'] 
-                                                            / segment['current_month_day_count'])
-                        segment['actual_total_cost'] = (actual_cost_data['total_cost']
-                                                        * segment['days_in_period'] 
-                                                        / segment['current_month_day_count'])
+                        for cost_type in cost_types:
+                            actual_key = f'actual_{cost_type}_cost'
+                            cost_key = f'{cost_type}_cost'
+
+                            segment[actual_key] = (actual_cost_data[cost_key]
+                                                   * segment['days_in_period']
+                                                   / segment['current_month_day_count'])
                     else:
-                        segment['actual_rental_cost'] = 0.0
-                        segment['actual_exploitation_cost'] = 0.0
-                        segment['actual_marketing_cost'] = 0.0
-                        segment['actual_total_cost'] = 0.0
+                        for cost_type in cost_types:
+                            segment[f'actual_{cost_type}_cost'] = 0.0
+
+                    # Base values common for all cost centers (or for the object itself)
+                    # (логіка ОК)
+                    base_values = {
+                        'rental_object_id': obj.id,
+                        'contract_id': segment.get('contract_id'),
+                        'date_from': segment['date_from'],
+                        'date_to': segment['date_to'],
+                        'rental_currency_coef': segment['rental_currency_coef'],
+                        'exploitation_currency_coef': segment['exploitation_currency_coef'],
+                        'marketing_currency_coef': segment['marketing_currency_coef'],
+                        'area_size': segment['area_size'],
+                        'indexation_coefficient': segment['indexation_coefficient'],
+                        # company_currency_id will be set in the wizard
+                    }
 
                     if cost_centers and total_area > 0:
+                        # Distribute to cost centers
                         for cost_center in cost_centers:
-                            # Create a new data dictionary for each cost center
-                            segment_with_cc = segment.copy()
                             coefficient = cost_center.area_size / total_area
-                            
-                            # Apply the coefficient to the amounts
-                            segment_with_cc['rental_amount'] *= coefficient
-                            segment_with_cc['exploitation_amount'] *= coefficient
-                            segment_with_cc['marketing_amount'] *= coefficient
-                            segment_with_cc['rent_total'] *= coefficient
+                            line_values = base_values.copy()
 
-                            # Apply the coefficient to the actual costs
-                            segment_with_cc['actual_rental_cost'] *= coefficient
-                            segment_with_cc['actual_exploitation_cost'] *= coefficient
-                            segment_with_cc['actual_marketing_cost'] *= coefficient
-                            segment_with_cc['actual_total_cost'] *= coefficient
-                            
-                            # Link to the cost center
-                            segment_with_cc['cost_center_id'] = cost_center.id
-                            
-                            distributed_report_data.append(segment_with_cc)
+                            # Apply the coefficient to all fields in amount_fields (включаючи планові)
+                            for field in amount_fields:
+                                line_values[field] = segment[field] * coefficient
+
+                            line_values['cost_center_id'] = cost_center.id
+
+                            report_data_for_creation.append(line_values)
                     else:
-                        # Fallback for objects without cost centers: add a single line for the object
-                        segment['cost_center_id'] = False # No cost center
-                        distributed_report_data.append(segment)
+                        # Fallback for objects without cost centers
+                        line_values = base_values.copy()
 
-        return distributed_report_data
+                        # Transfer all amounts without change (включаючи планові)
+                        for field in amount_fields:
+                            line_values[field] = segment[field]
+
+                        line_values['cost_center_id'] = False  # No cost center
+                        report_data_for_creation.append(line_values)
+
+        return report_data_for_creation

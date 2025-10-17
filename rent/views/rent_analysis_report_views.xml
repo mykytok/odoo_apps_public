@@ -13,11 +13,14 @@
                 <field name="date_to"/>
                 <field name="area_size"/>
                 <field name="indexation_coefficient" digits="[16, 8]"/>
-                <field name="rental_amount" sum="Total Rental"/>
+                <field name="rental_amount" sum="Rental"/>
+                <field name="plan_rental_amount" sum="Rental Plan"/>
                 <field name="rental_currency_coef" sum="Rental currency coefficient"/>
-                <field name="exploitation_amount" sum="Total Exploitation"/>
+                <field name="exploitation_amount" sum="Exploitation"/>
+                <field name="plan_exploitation_amount" sum="Exploitation Plan"/>
                 <field name="exploitation_currency_coef" sum="Exploitation currency coefficient"/>
-                <field name="marketing_amount" sum="Total Marketing"/>
+                <field name="marketing_amount" sum="Marketing"/>
+                <field name="plan_marketing_amount" sum="Marketing Plan"/>
                 <field name="marketing_currency_coef" sum="Marketing currency coefficient"/>
                 <field name="rent_total" sum="Grand Total Rent"/>
                 <field name="company_currency_id" optional="hidden"/>

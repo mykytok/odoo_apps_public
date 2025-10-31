@@ -20,6 +20,6 @@
 
     <menuitem id="rent_menu_planned_monthly_revenue"
               action="action_rent_planned_monthly_revenue_window"
-              parent="rent_menu_configuration"
+              parent="menu_rent_rental_objects"
               name="Planned monthly revenue" sequence="200"/>
 </odoo>

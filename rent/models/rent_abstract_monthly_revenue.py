@@ -25,8 +25,9 @@ class AbstractMonthlyRevenue(models.AbstractModel):
     @api.depends('revenue')
     def _compute_name(self):
         for record in self:
-            record.name = ("%s %s %s" %
+            record.name = ("%s %s %s %s" %
                            (record.cost_center_id.name,
+                            record.cost_center_id.title,
                             format_date(env=self.env, value=record.date),
                             record.revenue)
                            )

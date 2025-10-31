@@ -102,6 +102,40 @@ class RentalObject(models.Model):
         return actual_costs_map
 
     @api.model
+    def _aggregate_monthly_revenues(self, rental_object_id, date_from, date_to, model_name):
+        """Aggregates actual or planned revenues by (year, month) key, grouped by cost center."""
+        revenues_map = {}
+
+        # Use self.env, as this is an @api.model method
+        # Search revenues related to cost centers of the rental object
+        revenues = self.env[model_name].search([
+            ('cost_center_id.rental_object_id', '=', rental_object_id),
+            ('date', '>=', date_from),
+            ('date', '<=', date_to)
+        ])
+
+        # Aggregate revenues by month and cost center
+        for revenue_record in revenues:
+            if not revenue_record.date:
+                continue
+
+            month_key = (revenue_record.date.year, revenue_record.date.month)
+
+            # Map structure: { (year, month): { cost_center_id: revenue_sum } }
+            if month_key not in revenues_map:
+                revenues_map[month_key] = {}
+
+            # Use False if cost_center_id is not set (e.g., revenue assigned directly to object)
+            cost_center_id = revenue_record.cost_center_id.id or False
+
+            if cost_center_id not in revenues_map[month_key]:
+                revenues_map[month_key][cost_center_id] = 0.0
+
+            revenues_map[month_key][cost_center_id] += revenue_record.revenue
+
+        return revenues_map
+
+    @api.model
     def _get_rent_calculation_for_range(self, date_from, date_to):
         """
         Calculates and prepares distributed rent data for each rental object
@@ -130,6 +164,14 @@ class RentalObject(models.Model):
             # Aggregate actual costs using the helper function
             actual_costs_map = self._aggregate_actual_costs(obj.id, date_from, date_to)
 
+            # Aggregate actual and planned revenues
+            actual_revenues_map = self._aggregate_monthly_revenues(
+                obj.id, date_from, date_to, 'rent.actual.monthly.revenue'
+            )
+            planned_revenues_map = self._aggregate_monthly_revenues(
+                obj.id, date_from, date_to, 'rent.planned.monthly.revenue'
+            )
+
             cost_centers = obj.cost_center_ids.filtered(lambda cc: cc.area_size > 0)
             total_area = sum(cost_centers.mapped('area_size'))
 
@@ -145,12 +187,11 @@ class RentalObject(models.Model):
                     obj, effective_contract, interval_start, interval_end, company_currency
                 )
 
-                # ВИПРАВЛЕНО: Додано всі 4 планові поля
                 amount_fields = [
                     'rental_amount', 'exploitation_amount', 'marketing_amount', 'rent_total',
                     'plan_rental_amount', 'plan_exploitation_amount', 'plan_marketing_amount', 'plan_rent_total',
-                    # <--- ДОДАНО
-                    'actual_rental_cost', 'actual_exploitation_cost', 'actual_marketing_cost', 'actual_total_cost'
+                    'actual_rental_cost', 'actual_exploitation_cost', 'actual_marketing_cost', 'actual_total_cost',
+                    'actual_revenue', 'planned_revenue',
                 ]
 
                 for segment in monthly_segments:
@@ -173,8 +214,15 @@ class RentalObject(models.Model):
                         for cost_type in cost_types:
                             segment[f'actual_{cost_type}_cost'] = 0.0
 
+                    # Temporary set revenue fields to 0.0 in the segment for 'amount_fields' compliance
+                    segment['actual_revenue'] = 0.0
+                    segment['planned_revenue'] = 0.0
+
+                    # Get monthly revenue data
+                    month_actual_revenues = actual_revenues_map.get(segment_month, {})
+                    month_planned_revenues = planned_revenues_map.get(segment_month, {})
+
                     # Base values common for all cost centers (or for the object itself)
-                    # (логіка ОК)
                     base_values = {
                         'rental_object_id': obj.id,
                         'contract_id': segment.get('contract_id'),
@@ -185,7 +233,6 @@ class RentalObject(models.Model):
                         'marketing_currency_coef': segment['marketing_currency_coef'],
                         'area_size': segment['area_size'],
                         'indexation_coefficient': segment['indexation_coefficient'],
-                        # company_currency_id will be set in the wizard
                     }
 
                     if cost_centers and total_area > 0:
@@ -196,7 +243,26 @@ class RentalObject(models.Model):
 
                             # Apply the coefficient to all fields in amount_fields (включаючи планові)
                             for field in amount_fields:
+                                if field in ('actual_revenue', 'planned_revenue'):
+                                    continue
                                 line_values[field] = segment[field] * coefficient
+
+                            # 3. Calculate and apply actual/planned revenues for the specific Cost Center
+                            # Actual Revenue (proportional to days in the period)
+                            actual_rev_for_cc = month_actual_revenues.get(cost_center.id, 0.0)
+                            line_values['actual_revenue'] = (
+                                    actual_rev_for_cc
+                                    * segment['days_in_period']
+                                    / segment['current_month_day_count']
+                            ) if segment['current_month_day_count'] else 0.0
+
+                            # Planned Revenue (proportional to days in the period)
+                            planned_rev_for_cc = month_planned_revenues.get(cost_center.id, 0.0)
+                            line_values['planned_revenue'] = (
+                                    planned_rev_for_cc
+                                    * segment['days_in_period']
+                                    / segment['current_month_day_count']
+                            ) if segment['current_month_day_count'] else 0.0
 
                             line_values['cost_center_id'] = cost_center.id
 

@@ -1,10 +1,12 @@
 from odoo import models, fields, api, _
+from odoo.tools.misc import format_date
 
 class RentActualCost(models.Model):
     _name = 'rent.actual.cost'
     _description = 'Actual Rent Costs'
 
-    name = fields.Char(string="Description", required=True)
+    name = fields.Char(string="Name",
+                       compute='_compute_name',)
     rental_object_id = fields.Many2one(
         comodel_name='rent.rental.object',
         string='Rental Object',
@@ -45,3 +47,14 @@ class RentActualCost(models.Model):
     def _compute_total_cost(self):
         for rec in self:
             rec.total_cost = rec.rental_cost + rec.exploitation_cost + rec.marketing_cost
+
+    @api.depends('rental_object_id')
+    @api.depends('date')
+    @api.depends('total_cost')
+    def _compute_name(self):
+        for record in self:
+            record.name = ("%s %s %s" %
+                           (record.rental_object_id.name,
+                            format_date(env=self.env, value=record.date),
+                            record.total_cost)
+                           )

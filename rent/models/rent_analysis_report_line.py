@@ -74,8 +74,19 @@ class RentAnalysisReportLine(models.TransientModel):
         currency_field='company_currency_id',
         readonly=True
     )
+
     actual_total_cost = fields.Monetary(
-        string='Actual Total Cost',
+        string='Total Cost',
+        currency_field='company_currency_id',
+        readonly=True)
+
+    actual_revenue = fields.Monetary(
+        string='Revenue Actual',
+        currency_field='company_currency_id',
+        readonly=True
+    )
+    planned_revenue = fields.Monetary(
+        string='Revenue Planned',
         currency_field='company_currency_id',
         readonly=True
     )

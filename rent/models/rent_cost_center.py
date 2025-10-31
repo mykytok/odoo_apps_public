@@ -8,7 +8,8 @@ class CostCenter(models.Model):
     _name = 'rent.cost.center'
     _description = 'Cost center'
 
-    name = fields.Char(translate=True)
+    name = fields.Char(string="Code")
+    title = fields.Char(translate=True, string="Title")
     active = fields.Boolean(default=True)
     rental_object_id = fields.Many2one(
         comodel_name='rent.rental.object'

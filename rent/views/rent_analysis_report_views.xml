@@ -34,6 +34,9 @@
                 <field name="delta_exploitation" sum="Delta Exploitation"/>
                 <field name="delta_marketing" sum="Delta Marketing"/>
                 <field name="delta_total" sum="Delta Total"/>
+
+                <field name="actual_revenue" sum="Actual Rental"/>
+                <field name="planned_revenue" sum="Actual Exploitation"/>
             </tree>
         </field>
     </record>

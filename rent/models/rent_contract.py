@@ -245,6 +245,12 @@ class Contract(models.Model):
             'company_currency_id': company_currency.id,  # Use passed currency
             'company_currency_symbol': company_currency.symbol,
             'company_currency_name': company_currency.name,
+
+            'plan_rental_amount': 0.0,
+            'plan_exploitation_amount': 0.0,
+            'plan_marketing_amount': 0.0,
+            'plan_rent_total': 0.0,
+
         }
 
     @api.model

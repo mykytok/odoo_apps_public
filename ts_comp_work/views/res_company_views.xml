@@ -1,0 +1,31 @@
+<odoo>
+    <record id="res_config_settings_view_form_inherit_ts_comp_work" model="ir.ui.view">
+        <field name="name">res.config.settings.form.ts.comp.work.inherit</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="/form" position="inside">
+                <div class="app_settings_block" data-string="Timesheet Work" string="Timesheet Billing Defaults" data-key="ts_comp_work">
+                    <h2>Timesheet Billing Defaults</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="ts_comp_work_default_service_id"/>
+                                <div class="text-muted">
+                                    Set a global service product for billing timesheets by default.
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field name="ts_comp_work_default_service_id"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

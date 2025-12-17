@@ -38,6 +38,7 @@
                                 <field name="contract_type"/>
                                 <field name="number"/>
                                 <field name="date"/>
+                                <field name="act_start_date"/>
                                 <field name="expiration_date"/>
                                 <field name="rent_indexation"/>
                                 <field name="initial_rent_indexation_date"/>

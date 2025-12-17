@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+            id="action_contract_print_form_wizard"
+            model="rent.contract"
+            string="Реєстр договорів"
+            report_type="qweb-pdf"
+            name="rent.report_contract_print_form_template"
+            file="rent.report_contract_print_form_template"
+            print_report_name="'Друкована Форма - %s' % (object.number)"
+        />
+
+        </data>
+</odoo>

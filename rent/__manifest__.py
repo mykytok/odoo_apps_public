@@ -39,9 +39,12 @@
 
 
         'reports/rental_object_report.xml',
+        'reports/rent_contract_report.xml',
 
         'views/rent_analysis_report_views.xml',
         'wizards/rent_analysis_wizard_view.xml',
+        'wizards/rent_contract_report_wizard_views.xml',
+
 
     ],
     'demo': [

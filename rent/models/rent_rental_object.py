@@ -59,6 +59,72 @@ class RentalObject(models.Model):
         help="Country of location of the rental object."
     )
 
+    main_guarantee_payment_id = fields.Many2one(
+        comodel_name='rent.guarantee.payment',
+        string='Main Guarantee Payment',
+        compute='_compute_main_guarantee_payment',
+        store=True,
+    )
+
+    gp_amount = fields.Monetary(
+        currency_field='gp_currency_id',
+        string='Security Deposit Amount (GP)',
+        compute='_compute_main_guarantee_details',
+        store=True,
+    )
+    gp_currency_id = fields.Many2one(
+        comodel_name='res.currency',
+        string='Deposit Currency',
+        compute='_compute_main_guarantee_details',
+        store=True,
+    )
+
+    gp_discounting_guarantee = fields.Char(
+        string='Discounting/Bank Guarantee Details',
+        compute='_compute_main_guarantee_details',
+        store=True,
+    )
+
+
+
+    @api.depends('guarantee_payment_ids.date', 'guarantee_payment_ids.active')
+    def _compute_main_guarantee_payment(self):
+        """ Знаходить найбільш релевантний активний гарантійний платіж (за датою) """
+        for record in self:
+            main_gp = self.env['rent.guarantee.payment'].search([
+                ('rental_object_id', '=', record.id),
+                ('active', '=', True)
+            ], order='date desc, id desc', limit=1)
+            record.main_guarantee_payment_id = main_gp.id if main_gp else False
+
+    @api.depends('main_guarantee_payment_id.sum', 'main_guarantee_payment_id.currency_id',
+                 'main_guarantee_payment_id.discounted', 'main_guarantee_payment_id.guarantee_type')
+    def _compute_main_guarantee_details(self):
+        """ Обчислює деталі ГП для об'єкта оренди """
+        for record in self:
+            gp = record.main_guarantee_payment_id
+
+            if gp:
+                record.gp_amount = gp.sum
+                record.gp_currency_id = gp.currency_id
+
+                guarantee_info = []
+
+                # Додаємо тип гарантії
+                type_label = dict(gp._fields['guarantee_type'].selection).get(gp.guarantee_type)
+                if type_label:
+                    guarantee_info.append(type_label)
+
+                # Додаємо інформацію про дисконтування
+                if gp.discounted:
+                    guarantee_info.append("Discounted")
+
+                record.gp_discounting_guarantee = " / ".join(guarantee_info)
+            else:
+                record.gp_amount = 0.0
+                record.gp_currency_id = False
+                record.gp_discounting_guarantee = False
+
     @api.depends('contract_ids')
     def _compute_actual_contract_number_date(self):
         for record in self:

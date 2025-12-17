@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access__ts_comp_work_timesheet_line__group_group_user,access__ts_comp_work_timesheet_line__group_user_user,model_ts_comp_work_timesheet_line,base.group_user,1,1,1,1

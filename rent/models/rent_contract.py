@@ -4,6 +4,7 @@ from datetime import date, timedelta
 from odoo import models, fields, api, _
 from odoo.tools.misc import format_date
 from odoo.exceptions import ValidationError
+from dateutil.relativedelta import relativedelta
 
 
 class Contract(models.Model):
@@ -27,6 +28,12 @@ class Contract(models.Model):
     number = fields.Char()
     date = fields.Date()
     expiration_date = fields.Date()  # last day of contract
+
+    act_start_date = fields.Date(
+        string='Start Date (Act of Acceptance)',
+        help="Date of start of rent according to the act of acceptance."
+    )
+
     contract_type = fields.Selection(
         [('contract', 'Contract'),
          ('main_additional_agreement', 'Main additional agreement'),
@@ -81,6 +88,21 @@ class Contract(models.Model):
         string='Partner',
         help="The partner associated with this contract."
     )
+
+    rental_term_months = fields.Integer(
+            string="Rental term, months",
+        compute='_compute_rental_term_months',
+        store=True,
+    )
+
+    @api.depends('act_start_date', 'expiration_date')
+    def _compute_rental_term_months(self):
+        for contract in self:
+            if contract.act_start_date and contract.expiration_date:
+                diff = relativedelta(contract.expiration_date, contract.act_start_date)
+                contract.rental_term_months = diff.years * 12 + diff.months
+            else:
+                contract.rental_term_months = 0
 
     @api.depends('rental_object_id.name', 'number', 'date')
     @api.onchange('rental_object_id', 'number', 'date')

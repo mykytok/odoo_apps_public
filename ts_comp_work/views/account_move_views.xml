@@ -1,0 +1,38 @@
+<odoo>
+    <record id="view_move_form_inherit_ts_comp_work" model="ir.ui.view">
+        <field name="name">account.move.form.ts.comp.work.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <group string="Timesheet Billing Period" invisible="move_type != 'out_invoice'">
+                    <field name="ts_comp_work_date_from"/>
+                    <field name="ts_comp_work_date_to"/>
+                    <button name="action_fill_timesheet_lines" type="object" string="Fill Work From Timesheets"
+                            class="oe_highlight"
+                            invisible="move_type != 'out_invoice'"
+                            help="Fills the work detail table based on timesheets for the specified period and customer."/>
+                </group>
+            </xpath>
+
+            <xpath expr="//notebook/page[@id='invoice_tab']" position="after">
+                <page string="Work Detail (Timesheets)" name="timesheet_detail_tab" invisible="move_type != 'out_invoice'">
+                    <field name="ts_comp_work_timesheet_line_ids">
+                        <tree editable="bottom">
+                            <field name="ts_comp_work_description"/>
+                            <field name="ts_comp_work_quantity"/>
+                            <field name="ts_comp_work_product_id" required="1" options="{'no_create': True}"/>
+                            <field name="ts_comp_work_original_timesheet_id" invisible="1"/>
+                        </tree>
+                    </field>
+                    <button name="action_create_invoice_lines" type="object" string="Create Invoice Lines"
+                            class="oe_highlight"
+                            invisible="ts_comp_work_timesheet_line_ids == []"
+                            help="Transfers the detailed work lines to the standard invoice lines for calculation."/>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

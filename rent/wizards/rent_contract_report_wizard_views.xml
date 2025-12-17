@@ -3,23 +3,46 @@
         <field name="name">rent.contract.report.wizard.tree</field>
         <field name="model">rent.contract.report.wizard</field>
         <field name="arch" type="xml">
-            <tree string="Звіт" create="false" edit="false" delete="true">
-                <field name="group_no" optional="show"/>
-                <field name="partner_id"/>
+            <tree string="Звіт"
+                  create="false"
+                  edit="false"
+                  delete="true"
+                  decoration-bf="not contract_type"
+                  decoration-info="not contract_type">
+
+                <field name="group_no"/>
                 <field name="rental_object_group_id"/>
                 <field name="rental_object_id"/>
+
+                <field name="partner_id"/>
                 <field name="contract_type"/>
                 <field name="contract_number"/>
                 <field name="contract_date"/>
                 <field name="act_start_date"/>
                 <field name="expiration_date"/>
                 <field name="term_months" sum="Total Months"/>
+
                 <field name="gp_amount" sum="Total GP"/>
-                <field name="currency_id" column_invisible="True"/>
                 <field name="gp_guarantee"/>
-                <field name="is_discounted" optional="show" widget="boolean_toggle" readonly="1"/>
+                <field name="is_discounted" widget="boolean_toggle" readonly="1"/>
                 <field name="notes"/>
+
+                <field name="currency_id" column_invisible="True"/>
             </tree>
+        </field>
+    </record>
+
+    <record id="view_rent_contract_report_wizard_search" model="ir.ui.view">
+        <field name="name">rent.contract.report.wizard.search</field>
+        <field name="model">rent.contract.report.wizard</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="rental_object_id"/>
+                <field name="partner_id"/>
+                <group expand="1" string="Group By">
+                    <filter string="Об'єкт оренди" name="group_by_object" context="{'group_by': 'rental_object_id'}"/>
+                </group>
+            </search>
         </field>
     </record>
 
@@ -28,12 +51,12 @@
         <field name="model_id" ref="model_rent_contract_report_wizard"/>
         <field name="state">code</field>
         <field name="code">
-            action = model.action_generate_list()
+action = model.action_generate_list()
         </field>
     </record>
 
     <menuitem id="menu_rent_report_action"
-              name="Зведена таблиця оренди (Список)"
+              name="Зведений реєстр договорів"
               parent="menu_rent_reports"
               action="action_open_rent_report_wizard"
               sequence="10"/>

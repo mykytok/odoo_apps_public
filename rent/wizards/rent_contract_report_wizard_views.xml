@@ -4,25 +4,24 @@
         <field name="model">rent.contract.report.wizard</field>
         <field name="arch" type="xml">
             <tree string="Звіт"
-                  create="false"
-                  edit="false"
-                  delete="true"
-                  decoration-bf="not contract_type"
-                  decoration-info="not contract_type">
+                  create="false" edit="false" delete="true"
+                  decoration-info="not rental_object_id"
+                  decoration-bf="not contract_type">
 
                 <field name="group_no"/>
-                <field name="partner_id"/>
                 <field name="rental_object_group_id"/>
-                <field name="rental_object_id"/>
+                <field name="partner_id"/>
 
+                <field name="rental_object_id"/>
                 <field name="contract_type"/>
                 <field name="contract_number"/>
                 <field name="contract_date"/>
                 <field name="act_start_date"/>
                 <field name="expiration_date"/>
-                <field name="term_months" invisible="term_months == 0"/>
 
+                <field name="term_months" invisible="term_months == 0"/>
                 <field name="gp_amount" invisible="gp_amount == 0"/>
+
                 <field name="gp_guarantee"/>
                 <field name="is_discounted"/>
                 <field name="notes"/>

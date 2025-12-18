@@ -31,125 +31,79 @@ class ContractReportWizard(models.TransientModel):
 
         rental_objects = self.env['rent.rental.object'].search([], order='rental_object_group_id, name')
         wizard_records = []
-        obj_counter = 1
+
+        last_group_id = False
+        group_counter = 0
 
         for obj in rental_objects:
+            current_group = obj.rental_object_group_id
 
-            partner_id = obj.rental_object_group_id.res_partner_id.id
+            # ПЕРЕВІРКА: Нова група об'єктів?
+            if current_group.id != last_group_id:
+                group_counter += 1
+                last_group_id = current_group.id
+
+                # --- РІВЕНЬ 1: Заголовок ГРУПИ ---
+                wizard_records.append({
+                    'group_no': group_counter,  # Номер групи
+                    'rental_object_group_id': current_group.id,
+                    'partner_id': current_group.res_partner_id.id if current_group.res_partner_id else False,
+                    # Всі інші поля пусті
+                    'rental_object_id': False,
+                    'contract_type': False,
+                    'gp_amount': 0.0,
+                    'term_months': 0,
+                    'is_discounted': "",
+                })
+
+            # Дані об'єкта
             gp = obj.main_guarantee_payment_id
             guarantee_type_label = dict(gp._fields['guarantee_type'].selection).get(gp.guarantee_type, "") if gp else ""
-            is_disc = gp.discounted if gp else False
+            is_disc = "Так" if (gp and gp.discounted) else "Ні"
             clean_notes = html2plaintext(obj.comment) if obj.comment else ""
 
-            # --- РЯДОК 1: Тільки дані об'єкта (Заголовок) ---
+            # --- РІВЕНЬ 2: Заголовок ОБ'ЄКТА ---
             wizard_records.append({
-                'group_no': obj_counter,
-                'rental_object_group_id': obj.rental_object_group_id.id,
+                'group_no': group_counter,  # Повторюємо номер групи
+                'rental_object_group_id': "",
                 'rental_object_id': obj.id,
+                'partner_id': "",
                 'gp_amount': obj.gp_amount,
                 'currency_id': obj.gp_currency_id.id,
                 'gp_guarantee': guarantee_type_label,
-                'is_discounted': "Так",
+                'is_discounted': is_disc,
                 'notes': clean_notes,
-                # Поля договору залишаємо порожніми
-                'partner_id': partner_id,
+                'contract_type': False,  # Ознака, що це рядок об'єкта
                 'contract_number': False,
+                'term_months': 0,
             })
 
-            # --- НАСТУПНІ РЯДКИ: Деталі договорів ---
+            # --- РІВЕНЬ 3: Деталі ДОГОВОРІВ ---
             contracts = obj.contract_ids.sorted(key=lambda r: r.date or fields.Date.today())
             for contract in contracts:
                 wizard_records.append({
-                    'group_no': obj_counter,
+                    'group_no': group_counter,  # Повторюємо номер групи
                     'rental_object_group_id': "",
-                    'rental_object_id': "",
-                    # Дані договору
-                    'partner_id': "",
+                    'rental_object_id': obj.id,
+                    'partner_id': False,  # Очищуємо для чистоти списку
                     'contract_type': contract.contract_type,
                     'contract_number': contract.number,
                     'contract_date': contract.date,
                     'act_start_date': contract.act_start_date,
                     'expiration_date': contract.expiration_date,
                     'term_months': contract.rental_term_months,
-                    # Очищуємо дані об'єкта, щоб вони не дублювалися в Excel/списку
                     'gp_amount': 0.0,
                     'gp_guarantee': "",
                     'is_discounted': "",
                     'notes': "",
                 })
 
-            obj_counter += 1
-
         self.create(wizard_records)
 
         return {
-            'name': 'Зведена таблиця оренди',
+            'name': 'Зведений реєстр договорів',
             'type': 'ir.actions.act_window',
             'res_model': 'rent.contract.report.wizard',
             'view_mode': 'tree',
             'target': 'current',
-            'context': {'search_default_group_by_object': 0}  # Вимикаємо групування за замовчуванням
         }
-    # def action_generate_list(self):
-    #     self.search([]).unlink()
-    #
-    #     # Отримуємо всі об'єкти оренди
-    #     rental_objects = self.env['rent.rental.object'].search([], order='rental_object_group_id, name')
-    #     wizard_records = []
-    #
-    #     obj_counter = 1
-    #
-    #     for obj in rental_objects:
-    #         # Отримуємо ВСІ договори об'єкта та сортуємо їх по даті
-    #         # Використовуємо sorted() для сортування recordset
-    #         contracts = obj.contract_ids.sorted(key=lambda r: r.date or fields.Date.today())
-    #
-    #         gp = obj.main_guarantee_payment_id
-    #         guarantee_type_label = dict(gp._fields['guarantee_type'].selection).get(gp.guarantee_type, "") if gp else ""
-    #         is_disc = gp.discounted if gp else False
-    #
-    #         clean_notes = html2plaintext(obj.comment) if obj.comment else ""
-    #
-    #         # Якщо у об'єкта є договори - створюємо рядок для кожного
-    #         if contracts:
-    #             for contract in contracts:
-    #                 wizard_records.append({
-    #                     'group_no': obj_counter,
-    #                     'partner_id': contract.res_partner_id.id,
-    #                     'rental_object_group_id': obj.rental_object_group_id.id,
-    #                     'rental_object_id': obj.id,
-    #                     'contract_type': contract.contract_type,
-    #                     'contract_number': contract.number,
-    #                     'contract_date': contract.date,
-    #                     'act_start_date': contract.act_start_date,
-    #                     'expiration_date': contract.expiration_date,
-    #                     'term_months': contract.rental_term_months,
-    #                     'gp_amount': obj.gp_amount,
-    #                     'currency_id': obj.gp_currency_id.id,
-    #                     'gp_guarantee': guarantee_type_label,
-    #                     'is_discounted': is_disc,
-    #                     'notes': clean_notes,
-    #                 })
-    #         else:
-    #             # Якщо договорів взагалі немає, але об'єкт треба показати у звіті (опціонально)
-    #             wizard_records.append({
-    #                 'group_no': obj_counter,
-    #                 'rental_object_group_id': obj.rental_object_group_id.id,
-    #                 'rental_object_id': obj.id,
-    #                 'gp_amount': obj.gp_amount,
-    #                 'currency_id': obj.gp_currency_id.id,
-    #                 'gp_guarantee': guarantee_type_label,
-    #                 'is_discounted': is_disc,
-    #                 'notes': clean_notes,
-    #             })
-    #         obj_counter += 1
-    #
-    #     self.create(wizard_records)
-    #
-    #     return {
-    #         'name': 'Зведена таблиця договорів',
-    #         'type': 'ir.actions.act_window',
-    #         'res_model': 'rent.contract.report.wizard',
-    #         'view_mode': 'tree',
-    #         'target': 'current',
-    #     }

@@ -7,13 +7,13 @@ class ContractReportWizard(models.TransientModel):
     _description = 'Звіт по всіх договорах оренди'
 
     group_no = fields.Integer(string="№ групи", group_operator="max")
-    partner_id = fields.Many2one('res.partner', string="Орендар")
+    partner_id = fields.Many2one('res.partner', string="Орендодавець")
     rental_object_group_id = fields.Many2one('rent.rental.object.group', string="Група об'єкта")
     rental_object_id = fields.Many2one('rent.rental.object', string="Об'єкт оренди")
     contract_type = fields.Selection([
-        ('contract', 'Contract'),
-        ('main_additional_agreement', 'Main additional agreement'),
-        ('additional_agreement', 'Additional agreement')
+        ('contract', 'Договір'),
+        ('main_additional_agreement', 'Головна додаткова угода'),
+        ('additional_agreement', 'Додаткова угода')
     ], string="Тип договору")
     contract_number = fields.Char(string="Номер договору")
     contract_date = fields.Date(string="Дата договору")
@@ -23,7 +23,7 @@ class ContractReportWizard(models.TransientModel):
     gp_amount = fields.Monetary(string="Сума ГП", currency_field='currency_id', group_operator="avg")
     currency_id = fields.Many2one('res.currency')
     gp_guarantee = fields.Char(string="Тип гарантії", group_operator="max")
-    is_discounted = fields.Boolean(string="Дисконтування", group_operator="bool_and")
+    is_discounted = fields.Char(string="Дисконтування", group_operator="max")
     notes = fields.Char(string="Примітки", group_operator="max")
 
     def action_generate_list(self):
@@ -34,7 +34,8 @@ class ContractReportWizard(models.TransientModel):
         obj_counter = 1
 
         for obj in rental_objects:
-            # Отримуємо дані об'єкта
+
+            partner_id = obj.rental_object_group_id.res_partner_id.id
             gp = obj.main_guarantee_payment_id
             guarantee_type_label = dict(gp._fields['guarantee_type'].selection).get(gp.guarantee_type, "") if gp else ""
             is_disc = gp.discounted if gp else False
@@ -48,10 +49,10 @@ class ContractReportWizard(models.TransientModel):
                 'gp_amount': obj.gp_amount,
                 'currency_id': obj.gp_currency_id.id,
                 'gp_guarantee': guarantee_type_label,
-                'is_discounted': is_disc,
+                'is_discounted': "Так",
                 'notes': clean_notes,
                 # Поля договору залишаємо порожніми
-                'partner_id': False,
+                'partner_id': partner_id,
                 'contract_number': False,
             })
 
@@ -60,10 +61,10 @@ class ContractReportWizard(models.TransientModel):
             for contract in contracts:
                 wizard_records.append({
                     'group_no': obj_counter,
-                    'rental_object_group_id': obj.rental_object_group_id.id,
-                    'rental_object_id': obj.id,
+                    'rental_object_group_id': "",
+                    'rental_object_id': "",
                     # Дані договору
-                    'partner_id': contract.res_partner_id.id,
+                    'partner_id': "",
                     'contract_type': contract.contract_type,
                     'contract_number': contract.number,
                     'contract_date': contract.date,
@@ -73,7 +74,7 @@ class ContractReportWizard(models.TransientModel):
                     # Очищуємо дані об'єкта, щоб вони не дублювалися в Excel/списку
                     'gp_amount': 0.0,
                     'gp_guarantee': "",
-                    'is_discounted': False,
+                    'is_discounted': "",
                     'notes': "",
                 })
 

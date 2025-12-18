@@ -30,7 +30,7 @@ class Contract(models.Model):
     expiration_date = fields.Date()  # last day of contract
 
     act_start_date = fields.Date(
-        string='Start Date (Act of Acceptance)',
+        string='Дата початку оренди (акт)',
         help="Date of start of rent according to the act of acceptance."
     )
 

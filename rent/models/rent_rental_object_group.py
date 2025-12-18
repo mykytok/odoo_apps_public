@@ -22,6 +22,12 @@ class RentalObjectGroup(models.Model):
         string='Child rental object groups'
     )
 
+    res_partner_id = fields.Many2one(
+        comodel_name='res.partner',
+        string='Partner',
+        help="The partner associated with this group."
+    )
+
     @api.constrains('parent_id')
     def _check_parent_id_not_self(self):
         for record in self:

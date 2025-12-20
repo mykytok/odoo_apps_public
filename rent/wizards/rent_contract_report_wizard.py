@@ -38,64 +38,62 @@ class ContractReportWizard(models.TransientModel):
         for obj in rental_objects:
             current_group = obj.rental_object_group_id
 
-            # ПЕРЕВІРКА: Нова група об'єктів?
+            # Логіка визначення номеру групи
             if current_group.id != last_group_id:
                 group_counter += 1
                 last_group_id = current_group.id
+                is_first_obj_in_group = True
+            else:
+                is_first_obj_in_group = False
 
-                # --- РІВЕНЬ 1: Заголовок ГРУПИ ---
-                wizard_records.append({
-                    'group_no': group_counter,  # Номер групи
-                    'rental_object_group_id': current_group.id,
-                    'partner_id': current_group.res_partner_id.id if current_group.res_partner_id else False,
-                    # Всі інші поля пусті
-                    'rental_object_id': False,
-                    'contract_type': False,
-                    'gp_amount': 0.0,
-                    'term_months': 0,
-                    'is_discounted': "",
-                })
-
-            # Дані об'єкта
+            # Підготовка даних об'єкта (те, що раніше було в окремому рядку Рівня 2)
             gp = obj.main_guarantee_payment_id
             guarantee_type_label = dict(gp._fields['guarantee_type'].selection).get(gp.guarantee_type, "") if gp else ""
-            is_disc = "Так" if (gp and gp.discounted) else "Ні"
+            is_disc = "Так" if (gp and gp.discounted) else ""
             clean_notes = html2plaintext(obj.comment) if obj.comment else ""
 
-            # --- РІВЕНЬ 2: Заголовок ОБ'ЄКТА ---
-            wizard_records.append({
-                'group_no': group_counter,  # Повторюємо номер групи
-                'rental_object_group_id': "",
-                'rental_object_id': obj.id,
-                'partner_id': "",
-                'gp_amount': obj.gp_amount,
-                'currency_id': obj.gp_currency_id.id,
-                'gp_guarantee': guarantee_type_label,
-                'is_discounted': is_disc,
-                'notes': clean_notes,
-                'contract_type': False,  # Ознака, що це рядок об'єкта
-                'contract_number': False,
-                'term_months': 0,
-            })
-
-            # --- РІВЕНЬ 3: Деталі ДОГОВОРІВ ---
             contracts = obj.contract_ids.sorted(key=lambda r: r.date or fields.Date.today())
-            for contract in contracts:
+
+            if contracts:
+                for index, contract in enumerate(contracts):
+                    vals = {
+                        'group_no': group_counter,
+                        # Дані ГРУПИ: тільки для першого об'єкта в групі і тільки в його першому договорі
+                        'rental_object_group_id': current_group.id if (is_first_obj_in_group and index == 0) else False,
+                        'partner_id': (current_group.res_partner_id.id if current_group.res_partner_id else False)
+                        if (is_first_obj_in_group and index == 0) else False,
+
+                        # Дані ОБ'ЄКТА: тільки в першому договорі цього об'єкта
+                        'rental_object_id': obj.id if index == 0 else False,
+                        'gp_amount': obj.gp_amount if index == 0 else 0.0,
+                        'currency_id': obj.gp_currency_id.id if index == 0 else False,
+                        'gp_guarantee': guarantee_type_label if index == 0 else "",
+                        'is_discounted': is_disc if index == 0 else "",
+                        'notes': clean_notes if index == 0 else "",
+
+                        # Дані ДОГОВОРУ (завжди)
+                        'contract_type': contract.contract_type,
+                        'contract_number': contract.number,
+                        'contract_date': contract.date,
+                        'act_start_date': contract.act_start_date,
+                        'expiration_date': contract.expiration_date,
+                        'term_months': contract.rental_term_months,
+                    }
+                    wizard_records.append(vals)
+            else:
+                # Якщо у об'єкта немає договорів, створюємо один рядок з даними об'єкта
                 wizard_records.append({
-                    'group_no': group_counter,  # Повторюємо номер групи
-                    'rental_object_group_id': "",
+                    'group_no': group_counter,
+                    'rental_object_group_id': current_group.id if is_first_obj_in_group else False,
+                    'partner_id': (current_group.res_partner_id.id if current_group.res_partner_id else False)
+                    if is_first_obj_in_group else False,
                     'rental_object_id': obj.id,
-                    'partner_id': False,  # Очищуємо для чистоти списку
-                    'contract_type': contract.contract_type,
-                    'contract_number': contract.number,
-                    'contract_date': contract.date,
-                    'act_start_date': contract.act_start_date,
-                    'expiration_date': contract.expiration_date,
-                    'term_months': contract.rental_term_months,
-                    'gp_amount': 0.0,
-                    'gp_guarantee': "",
-                    'is_discounted': "",
-                    'notes': "",
+                    'gp_amount': obj.gp_amount,
+                    'currency_id': obj.gp_currency_id.id,
+                    'gp_guarantee': guarantee_type_label,
+                    'is_discounted': is_disc,
+                    'notes': clean_notes,
+                    'contract_type': False,
                 })
 
         self.create(wizard_records)
